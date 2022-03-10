@@ -1,0 +1,66 @@
+ion-content{
+    background:linear-gradient(45deg, #00CED1, #5A4FCF);
+
+}
+.flex-container{
+    display: flex;
+    background:linear-gradient(45deg, #00CED1, #5A4FCF);
+    transition: .3s all;   
+}
+.flex-container-init{
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;        
+}
+.flex-container-scanned{
+    height: 10%;
+
+    flex-direction: column;
+    justify-content: top;
+    align-items: center;        
+}
+
+
+.flex-content{
+display: flex;    
+ transition: .3s all;   
+}
+
+.flex-init{
+    height: 11em;
+    width: 50%;
+    background: dodgerblue;
+    border-radius: 50%;
+    justify-items: center;    
+    justify-content: center;
+    
+    align-items: center;
+    box-shadow:0 1px 2px #000;
+}
+
+
+.flex-scaning{
+    background: transparent;
+    height: 6em;
+    width: 100%;
+    justify-content:space-around;
+    align-items:center;
+}
+
+cdk-virtual-scroll-viewport {
+    height: 100%;
+    width: 100%;   
+    //  background:linear-gradient(45deg, #00CED1, #5A4FCF);
+
+  }
+  ion-card,ion-card-subtitle{
+      color:#fff
+  }
+  .icondiv{
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+  }

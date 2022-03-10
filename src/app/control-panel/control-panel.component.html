@@ -1,0 +1,20 @@
+<ion-card>
+  <ion-list>
+    <ion-item>
+      <ion-label color="warning">Set Light Controls</ion-label>
+      <ion-toggle [checked]="setValue" (ionChange)="setCtrl($event)" ></ion-toggle>
+    </ion-item>
+  </ion-list>
+</ion-card>
+
+<ion-card color="medium">
+  <ion-list>
+    
+
+    <ion-item class="ion-text-center">
+      <ion-avatar size="large">
+        <ion-icon size="large" [color]="setValue?'warning':'medium'" name="bulb-outline"></ion-icon>
+      </ion-avatar>
+    </ion-item>
+  </ion-list>
+</ion-card>

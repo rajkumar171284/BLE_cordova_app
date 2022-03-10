@@ -1,0 +1,22 @@
+.layout{
+    position: relative;    
+    height: 80vh;
+    background-image: url('/assets/office-layout.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+}
+ion-slides {
+    width: 100%;
+}
+.swiper-slide img {
+    width: 100%;
+    max-width: 100%;
+}
+.zoom-box {
+    position: absolute;
+    height: 90%;
+    display: flex;
+    width: 100%;
+}
