@@ -10,15 +10,29 @@
 <ion-grid>
   <ion-row>
     <ion-col size="6">
-      <ion-card class="switch1">
-        <ion-list>                
-          <ion-item class="ion-text-center">
+      <ion-card class="switches" color="switch1">
+
+         
+          <div  class="ion-text-center">
             <ion-col size="12" class="ion-text-center">
               <ion-icon class="icon" size="large" [color]="setValue?'warning':'dark'" name="bulb-outline"></ion-icon>
             </ion-col>
-            <!-- <ion-avatar size="large"> -->
-              
-            <!-- </ion-avatar> -->
+           
+
+            
+          </div>
+          <div>
+            <ion-toggle [checked]="setValue" (ionChange)="setCtrl($event)" ></ion-toggle>
+            {{setValue?'On':'Off'}}
+          </div>
+     
+
+        <!-- <ion-list color="switch1">                
+          <ion-item color="switch1" class="ion-text-center">
+            <ion-col size="12" class="ion-text-center">
+              <ion-icon class="icon" size="large" [color]="setValue?'warning':'dark'" name="bulb-outline"></ion-icon>
+            </ion-col>
+           
 
             
           </ion-item>
@@ -26,57 +40,58 @@
             <ion-toggle [checked]="setValue" (ionChange)="setCtrl($event)" ></ion-toggle>
             {{setValue?'On':'Off'}}
           </ion-item>
-        </ion-list>
+        </ion-list> -->
+
       </ion-card>
     </ion-col>
     <ion-col size="6">
-      <ion-card class="switch2" color="medium">
-        <ion-list>                
-          <ion-item  class="ion-text-center">
+      <ion-card class="switches" color="switch2" >
+                     
+        <div  class="ion-text-center">
             <ion-col size="12" class="ion-text-center">
               <ion-icon class="icon" size="large" [color]="setValue?'warning':'medium'" name="medical-outline"></ion-icon>
             </ion-col>
             
-          </ion-item>
-          <ion-item lines="none">
+          </div>
+          <div lines="none">
             <ion-toggle disabled [checked]="setValue" (ionChange)="setCtrl($event)" ></ion-toggle>
             Off
-          </ion-item>
-        </ion-list>
+          </div>
+       
       </ion-card>
     </ion-col>
     <ion-col size="6">
-      <ion-card class="switch3" color="medium">
-        <ion-list>                
-          <ion-item class="ion-text-center">
+      <ion-card class="switches" color="switch3" >
+                 
+          <div class="ion-text-center">
             <ion-col size="12" class="ion-text-center">
               <ion-icon class="icon" size="large" [color]="setValue?'warning':'medium'" name="desktop-outline"></ion-icon>
             </ion-col>
             
-          </ion-item>
-          <ion-item lines="none">
+          </div>
+          <div>
             <ion-toggle disabled [checked]="setValue" (ionChange)="setCtrl($event)" ></ion-toggle>
             Off
-          </ion-item>
-        </ion-list>
+          </div>
+       
       </ion-card>
     </ion-col>
     <ion-col size="6">
-      <ion-card class="switch4" color="medium">
-        <ion-list>
+      <ion-card class="switches" color="switch4">
+    
           
       
-          <ion-item class="ion-text-center">
+          <div class="ion-text-center">
             <ion-col size="12" class="ion-text-center">
               <ion-icon class="icon" size="large" [color]="setValue?'warning':'medium'" name="albums-outline"></ion-icon>
             </ion-col>
             
-          </ion-item>
-          <ion-item lines="none">
+          </div>
+          <div>
             <ion-toggle disabled [checked]="setValue" (ionChange)="setCtrl($event)" ></ion-toggle>
             Off
-          </ion-item>
-        </ion-list>
+          </div>
+     
       </ion-card>
     </ion-col>
   </ion-row>

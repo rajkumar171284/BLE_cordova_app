@@ -1,11 +1,19 @@
 <ion-content [fullscreen]="true">
 
+
   <div [ngClass]="{'flex-container-scanned':isScanned,'flex-container-init':!isScanned}" class="flex-container">
+    <ion-label *ngIf="!isScanned" class="ion-margin-bottom slogan">A Better way to
+      <ion-card-subtitle color="light">TRACK <ion-icon size="large" name="analytics-outline"></ion-icon>
+      </ion-card-subtitle>
+      your Devices
+    </ion-label>
+
 
     <div (click)="scan()" [ngClass]="{'flex-scaning':isScanned,'flex-init':!isScanned}" class="flex-content ">
-      <ion-label color="light" >
+      <ion-label color="light">
         <!-- <ion-icon name="scan-outline"></ion-icon>   -->
-        {{isScanned?'Scanning ...':'Scan'}}
+        {{isScanned?'Scanning ...':''}}
+        <ion-icon color="light" size="large" *ngIf="!isScanned" name="scan-outline"></ion-icon>
         <!-- {{data.length}} -->
       </ion-label>
       <ion-button slot="end" *ngIf="isScanned" color="medium" (click)="stopScan($event)">
@@ -15,67 +23,69 @@
       </ion-button>
     </div>
   </div>
-  <ion-grid color="none">
-    <ion-row>
-      <ion-col>
-        <ion-card-subtitle color="dark">
-          {{deviceList.length?'Available Device(s)':isScanned && deviceList.length==0?'No Device Found':''}}</ion-card-subtitle>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+  <!-- <div class="flex-container2"> -->
 
 
+    <div class="wbg">
+      <ion-grid>
+        <ion-row>
+          <ion-col>
+            <ion-card-subtitle color="light">
+              {{deviceList.length?'Available Device(s)':isScanned && deviceList.length==0?'No Device Found':''}}
+            </ion-card-subtitle>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </div>
+    <div class="wbg2">
 
+      <cdk-virtual-scroll-viewport minBufferPx="200" maxBufferPx="400" itemSize="50">
+       
+            <ion-card *cdkVirtualFor="let item of deviceList" [color]="item.isBLEMatched?'mybg':'shade1'">
 
-  <cdk-virtual-scroll-viewport minBufferPx="200" maxBufferPx="400" itemSize="50">
-    <ion-list>
-      
-      <ion-item *cdkVirtualFor="let item of deviceList" class="example-item">
+              <ion-grid>
+                <ion-row class="ion-justify-content-start">
+                  <ion-col size="3">
+                    <div>
+                      <ion-img src="assets/bluetooth.png"></ion-img>
+                    </div>
+                  </ion-col>
 
-        <ion-card [color]="item.isBLEMatched?'mybg':'blue3'">
+                  <ion-col size="7">
+                    <div>
 
-          <ion-grid>
-            <ion-row class="ion-justify-content-start">
-              <ion-col size="3">
-                <div>
-                  <ion-img src="assets/bluetooth.png"></ion-img>
-                </div>
-              </ion-col>
-              
-              <ion-col size="7">
-                <div>
-    
-                  <ion-card-header>
-    
-                    <ion-card-subtitle>{{item.id}}</ion-card-subtitle>
-                  </ion-card-header>
-    
-                  <ion-card-content>
-                    <ion-card-subtitle>RSSI:{{item.rssi}}</ion-card-subtitle>
-                    <ion-card-subtitle>
-                      {{ item.name?item.name:'' }}
-    
-                    </ion-card-subtitle>
-                  </ion-card-content>
-                  
-                </div>
-              </ion-col>
-    
-              <ion-col size="2">
-                <div>
-                  <ion-icon *ngIf="item.isBLEMatched" size="large" [color]="item.color" name="checkmark-circle-outline">
-                  </ion-icon>
-                  <!-- <ion-card-subtitle>{{item.isBLEMatched?'Match Found':'No Match'}}
+                      <ion-card-header>
+
+                        <ion-card-subtitle>{{item.id}}</ion-card-subtitle>
+                      </ion-card-header>
+
+                      <ion-card-content>
+                        <ion-card-subtitle>RSSI:{{item.rssi}}</ion-card-subtitle>
+                        <ion-card-subtitle>
+                          {{ item.name?item.name:'' }}
+
+                        </ion-card-subtitle>
+                      </ion-card-content>
+
+                    </div>
+                  </ion-col>
+
+                  <ion-col size="2">
+                    <div>
+                      <ion-icon *ngIf="item.isBLEMatched" size="large" [color]="item.color"
+                        name="checkmark-circle-outline">
+                      </ion-icon>
+                      <!-- <ion-card-subtitle>{{item.isBLEMatched?'Match Found':'No Match'}}
                   </ion-card-subtitle> -->
-                </div>
-              </ion-col>
-            </ion-row>
+                    </div>
+                  </ion-col>
+                </ion-row>
 
-          </ion-grid>
-        </ion-card>
-      </ion-item>
-    </ion-list>
+              </ion-grid>
+            </ion-card>
 
-  </cdk-virtual-scroll-viewport>
 
+      </cdk-virtual-scroll-viewport>
+    </div>
+  <!-- </div> -->
 </ion-content>

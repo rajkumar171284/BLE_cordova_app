@@ -1,9 +1,12 @@
 
-ion-avatar{
-    // padding: 5em;
+.switches div{
+    display: flex;justify-content: center;
+   align-items: center;
+   text-transform: uppercase;
+   padding: .5em;
 }
 ion-item{
-    text-transform: uppercase;
+  
 }
 .icon {
     display: inline-block;
@@ -11,9 +14,7 @@ ion-item{
     // color: #ffC977;
     vertical-align: middle;
    }
-ion-card{
-    // height: 20vh;
-}
+
 .switch1{
     --ion-background-color:#8EBBFD !important;
 }
@@ -28,5 +29,22 @@ ion-card{
 
 .switch4{
     --ion-background-color:#FFB2FF !important;
+}
+:root {
+	--ion-color-switch1: #8EBBFD;
+	--ion-color-switch1-rgb: 142,187,253;
+	--ion-color-switch1-contrast: #000000;
+	--ion-color-switch1-contrast-rgb: 0,0,0;
+	--ion-color-switch1-shade: #7da5df;
+	--ion-color-switch1-tint: #99c2fd;
+}
+
+.ion-color-switch1 {
+	--ion-color-base: var(--ion-color-switch1);
+	--ion-color-base-rgb: var(--ion-color-switch1-rgb);
+	--ion-color-contrast: var(--ion-color-switch1-contrast);
+	--ion-color-contrast-rgb: var(--ion-color-switch1-contrast-rgb);
+	--ion-color-shade: var(--ion-color-switch1-shade);
+	--ion-color-tint: var(--ion-color-switch1-tint);
 }
 

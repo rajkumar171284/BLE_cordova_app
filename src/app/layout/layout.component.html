@@ -2738,31 +2738,12 @@ WHRkYXRlOm1vZGlmeQAyMDIyLTAzLTAzVDEzOjE4OjM1KzAwOjAw9yQfXQAAAABJRU5ErkJggg==" />
               <ion-card-subtitle>
                 <ion-badge color="success">
 
-                Curr. Location : {{currPosition.loc}}
+                  Curr. Location : {{currPosition.loc}}
                 </ion-badge>
               </ion-card-subtitle>
             </ion-card-content>
           </ion-col>
-          <ion-col size="12">
-            <div class="flexcss">
-              <div>
-                <ion-badge>
-                  X : {{currPosition.x?currPosition.x:''}}
-                </ion-badge>
-              </div>
-              <div>
-                <ion-badge>
-
-                  Y : {{currPosition.y}}
-                </ion-badge>
-              </div>
-              <div>
-                <ion-badge>
-                  Z : {{currPosition.z}}
-                </ion-badge>
-              </div>
-            </div>
-          </ion-col>
+          
           <!-- <ion-col size="12">
             <div>cX : {{currPosition.currx}},</div>
             <div>cY : {{currPosition.curry}},</div>
@@ -2776,11 +2757,29 @@ WHRkYXRlOm1vZGlmeQAyMDIyLTAzLTAzVDEzOjE4OjM1KzAwOjAw9yQfXQAAAABJRU5ErkJggg==" />
 
   </div>
 
-  <!-- <div *ngIf="currPosition.lat" class="loc-position">
-    <ion-card color="success">
-      
-    </ion-card>
-   
-  </div> -->
+  <div *ngIf="currPosition.lat" class="loc-position">
+      <ion-col class="ion-no-padding" size="12">
+        <div class="flexcss">
+          <div>
+            <ion-badge>
+              X : {{currPosition.x?currPosition.x:'86876667676'}}
+            </ion-badge>
+          </div>
+          <div>
+            <ion-badge>
+
+              Y : {{currPosition.y?currPosition.y:'.4336656323'}}
+            </ion-badge>
+          </div>
+          <div>
+            <ion-badge>
+              Z : {{currPosition.z?currPosition.z:'09978675446'}}
+            </ion-badge>
+          </div>
+        </div>
+      </ion-col>
+    
+
+  </div>
 
 </ion-content>
