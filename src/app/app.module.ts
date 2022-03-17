@@ -9,7 +9,10 @@ import { AppComponent } from './app.component';
 import { BLE } from '@awesome-cordova-plugins/ble/ngx';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {SharedModule} from './shared/shared.module';
-// import { OrderPipe } from './order.pipe';
+// import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+
+// import { DeviceMotion, DeviceMotionAccelerationData } from '@ionic-native/device-motion';
+
 @NgModule({
   declarations: [AppComponent],
   entryComponents: [],

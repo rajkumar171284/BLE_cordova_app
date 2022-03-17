@@ -1,6 +1,11 @@
 ion-content{
     position: relative;
 }
+.myble{
+    position: absolute;
+    z-index: 3;
+    background: #ddd;
+}
 .swiper-wrapper{
     background-color: #fff!important;
 }
@@ -38,17 +43,23 @@ svg{
         }
     }
 .position{
-    left: 5px;
-    position: absolute;
+    width: 100%; 
+       position: absolute;
     z-index: 32;
     bottom: 55px;
     // border-radius: 3px;
-    // background: #ffca22;
+    background: #002244;
     padding: 0px;
     // -webkit-box-shadow:0 1px 2px #000;
     // -moz-box-shadow:0 1px 2px #000;
     // box-shadow:0 1px 2px #000;
     transition: .5s all;
+}
+.bottom-cnt{
+    background: #0066b2;color:#fff;
+    ion-card-header,ion-card-subtitle{
+        color:#fff;
+    }
 }
 .loc-position{
     left: 5px;
@@ -81,6 +92,14 @@ ion-slides {
     //  width: 135px;
 
 }
-.mainsvg text{
-
+ion-card-subtitle{
+    ion-badge{
+        color:#000;
+    }
+}
+.flexcss{
+    display: flex;flex-direction: column;
+    ion-badge{
+        color:darkred;
+    }
 }

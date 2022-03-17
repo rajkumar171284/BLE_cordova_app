@@ -42,7 +42,7 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
   dataParams = new dataparams();
   isScanned: boolean = false;
 
-  deviceList: any = [];
+  deviceList: bleList[] = [];
   newObservable: Subscription | undefined;
   constructor(private platform: Platform, private geolocation: Geolocation, private ble: BLE, private zone: NgZone) {
 
@@ -55,15 +55,12 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
   ngOnInit() {
     this.isScanned = false;
     this.deviceList = [];
-    // this.deviceList = valModel.staticList.map((x:bleList,i)=>{
-    //   if(x.isBLEMatched){
-    //     x.SNo = i+1;
-    //   }else{
-    //     x.SNo = Math.abs(x.rssi);
-    //   }
-    // })
-    // console.log(this.deviceList)
-    
+
+    this.deviceList = valModel.staticList.map((x: bleList, i) => {
+      return x;
+    })
+    console.log(this.deviceList)
+
     // this.interval2 = setInterval(() => {
     // this.newObservable = this.ble.scan([], 5).subscribe((res:any) => { return res });
 
@@ -98,17 +95,12 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
   }
   scan() {
     this.isScanned = true;
-    this.deviceList = []; // clear list
     console.log('Start scanning');
-
-
-
     this.platform.ready().then(() => {
       let watch = this.geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000 });
       watch.subscribe((data: any) => {
         // console.log(data)
         if (data && data.coords) {
-          this.deviceList = []; // clear list
           this.currPosition.lat = data.coords.latitude;
           this.currPosition.lng = data.coords.longitude;
           this.currPosition.datetime = data.coords.timestamp;
@@ -126,7 +118,7 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
 
           });
         }
-      
+
       });
       // 
     })
@@ -149,26 +141,46 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
 
   updatedata(res) {
     // console.log('upt',res)
-    this.zone.run(() => {
-      let result = this.filterList(res);
-      this.deviceList.push(result);
+    this.zone.run(async () => {
+      this.filterList(res);
+      // let result = await this.filterList(res);
+      // if(result.id){
+
+      // }
+      // this.deviceList.push(result);
     });
-    console.log('this.deviceList',this.deviceList)
+    console.log('this.deviceList', this.deviceList)
   }
-  filterList(x: bleList) {
+  async filterList(x: bleList) {
     // console.log('x', x)
     x.isBLEMatched = false;
-    const storedList = valModel.staticList;
-    storedList.forEach((element, index) => {
+    let newlist = new bleDOMClass();
+    newlist.id=x.id;
+    newlist.rssi = x.rssi;
+    newlist.name = x.name ? x.name : '';
+    newlist.getDistance(x.rssi)
+    newlist.isBLEMatched = false;
+    
+    this.deviceList.forEach((element, index) => {
       if (element.id == x.id) {
-        x.isBLEMatched = true;
-        x.SNo = index + 1;
-      } else {
-        x.SNo = Math.abs(x.rssi);
-      }
+        // if matched
+        x.isBLEMatched = true;        
+        // element.SNo = index + 1;
+        element.isBLEMatched = true;
+        element.rssi = x.rssi;
+        element.Distance = newlist.Distance;
+        element.color = 'warning';
 
-      x.color;
-      x.color = x.isBLEMatched ? 'warning' : 'success';
+      } else {
+        newlist.color = 'success';
+        newlist.isBLEMatched = false;
+        let newIndex=this.deviceList.findIndex(a=>{
+           return a.id==newlist.id
+        })
+        if(newIndex==-1){
+        this.deviceList.push(newlist)
+        }
+      }
     })
     return x;
 
@@ -178,7 +190,8 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
   //   return this.show ? 'show' : 'hide'
   // }
 
-  stopScan() {
+  stopScan(e) {
+  e.stopPropagation();
     this.isScanned = false;
     this.ble.stopScan().then(() => {
       this.isScanned = false;

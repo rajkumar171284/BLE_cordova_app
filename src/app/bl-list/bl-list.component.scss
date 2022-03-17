@@ -4,7 +4,7 @@ ion-content{
 }
 .flex-container{
     display: flex;
-    background:linear-gradient(45deg, #00CED1, #5A4FCF);
+    background:linear-gradient(45deg, #9966bb, #565cd8);
     transition: .3s all;   
 }
 .flex-container-init{
@@ -28,7 +28,10 @@ display: flex;
 }
 
 .flex-init{
-    height: 11em;
+    text-transform:uppercase;
+    text-shadow:0 1px 2px #000;
+    
+    height: 12em;
     width: 50%;
     background: dodgerblue;
     border-radius: 50%;

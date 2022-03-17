@@ -12,19 +12,25 @@ import * as _ from 'lodash';
 
 import { ActionSheetController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
+// import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
+import { DeviceMotion, DeviceMotionAccelerationData } from '@awesome-cordova-plugins/device-motion/ngx';
 
 
 @Component({
   selector: 'app-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
-  providers: [BLE, Geolocation],
+  providers: [BLE, Geolocation, DeviceMotion],
 })
 export class LayoutComponent implements OnInit, DoCheck {
   dataParams = new dataparams();
   deviceList: any = valModel.staticList;
   imgData: bleList[] = [];
-  currPosition: any = { lat: '', lng: '', datetime: '',error:'',header:'',text:'' ,loc:'',distance:'',rssi:''}
+  locationList = [];
+  currPosition: any = {
+    lat: '', lng: '', datetime: '', error: '', header: '', text: '', loc: '', distance: '', rssi: ''
+    , x: '', y: '', z: '',currx:'',curry:'',currz:''
+  }
   watch: Subscription;
   scanSubs: Subscription;
   slideOpts: any = {
@@ -38,11 +44,18 @@ export class LayoutComponent implements OnInit, DoCheck {
 
 
   }
-  constructor(public toastController: ToastController, public actionSheetController: ActionSheetController, public modalController: ModalController, private geolocation: Geolocation, private platform: Platform, private ble: BLE, private zone: NgZone) { }
+  subscription: Subscription;
+  constructor(private deviceMotion: DeviceMotion, public toastController: ToastController, public actionSheetController: ActionSheetController, public modalController: ModalController, private geolocation: Geolocation, private platform: Platform, private ble: BLE, private zone: NgZone) { }
 
   ngOnInit() {
 
-    
+    this.locationList = valModel.locationList.map(a => {
+
+      a.x = a.x * 50;
+      a.y = a.y * 150;
+      return a
+    })
+
     // this.presentModal()
     // if (document.getElementById('ble1')) {
 
@@ -57,6 +70,27 @@ export class LayoutComponent implements OnInit, DoCheck {
     // }
     this.findNearestBLE();
     this.pageLoad()
+
+    // Get the device current acceleration
+    // this.deviceMotion.getCurrentAcceleration().then(
+    //   (acceleration: DeviceMotionAccelerationData) => {
+    //     console.log(acceleration)
+    //     this.currPosition.currx = acceleration.x;
+    //     this.currPosition.curry = acceleration.y;
+    //     this.currPosition.currz = acceleration.z;
+    //   },
+    //   (error: any) => console.log(error)
+    // );
+
+
+    // Watch device acceleration
+    this.subscription = this.deviceMotion.watchAcceleration().subscribe((acceleration: DeviceMotionAccelerationData) => {
+      console.log(acceleration);
+      this.currPosition.x = acceleration.x;
+      this.currPosition.y = acceleration.y;
+      this.currPosition.z = acceleration.z;
+    });
+
   }
   findNearestBLE() {
     let near = _.orderBy(this.deviceList, 'Distance', 'asc')
@@ -94,7 +128,7 @@ export class LayoutComponent implements OnInit, DoCheck {
     this.platform.ready().then(() => {
 
       let watch = this.geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000 });
-      watch.subscribe((data: any) => {
+      this.watch = watch.subscribe((data: any) => {
         // console.log(data)
         if (data && data.coords) {
           this.currPosition.lat = data.coords.latitude;
@@ -145,9 +179,9 @@ export class LayoutComponent implements OnInit, DoCheck {
           })
           if (index != -1) {
             // id matches   
-                  console.log('a', a);      
-         
-            const data = this.imgData[index];            
+            console.log('a', a);
+
+            const data = this.imgData[index];
             // make active
             a.active = data.active;
             a.rssi = data.rssi;
@@ -179,7 +213,7 @@ export class LayoutComponent implements OnInit, DoCheck {
   }
 
   filterList(x: any) {
-    console.log('x', x)  
+    console.log('x', x)
     let newDevice = new bleDOMClass();
     newDevice.getDistance(x.rssi)
     newDevice.rssi = x.rssi;
@@ -187,7 +221,7 @@ export class LayoutComponent implements OnInit, DoCheck {
     newDevice.name = x.name ? x.name : '';
     newDevice.getDistance(x.rssi)
     newDevice.isBLEMatched = false;
-    newDevice.active = 'Active';    
+    newDevice.active = 'Active';
     return newDevice;
   }
   // myRadius;
@@ -195,13 +229,13 @@ export class LayoutComponent implements OnInit, DoCheck {
     console.log('ds')
   }
   getBLE(mac: string, type: string) {
-    let arr: bleList[] = this.deviceList.filter((x: bleList) => {      
+    let arr: bleList[] = this.deviceList.filter((x: bleList) => {
       return x.id === mac;
     })
     if (arr.length) {
       let meters: any;
       if (arr[0].Distance) {
-        meters = arr[0].Distance.toFixed(2);
+        meters = arr[0].Distance;
       }
       return type == 'mac' ? arr[0].id : type == 'Dist' && arr[0].Distance ? `RSSI :${arr[0].rssi} at ${meters
         } meters` : type == 'color' ? arr[0].strengthColor : type == 'status' ? arr[0].active : '';
@@ -251,63 +285,46 @@ export class LayoutComponent implements OnInit, DoCheck {
 
   async presentToastWithOptions(res: bleList) {
     console.log(res)
-    this.currPosition.loc='';
-    this.currPosition.rssi='';
+    this.currPosition.loc = '';
+    this.currPosition.rssi = '';
 
     let str;
     let colr;
     let hdr;
-    let newIcon:string;
+    let newIcon: string;
     if (res.Distance && res.rssi) {
-      this.currPosition.rssi=`${res.rssi}`;
+      this.currPosition.rssi = `${res.rssi}`;
       str = `MAC:${res.id} ,RSSI:${res.rssi}`;
       colr = 'success';
-      hdr='Nearest device you reached..';
-      newIcon='bluetooth-outline';
-      this.currPosition.loc=res.loc;
+      hdr = 'The device you reached is..';
+      newIcon = 'bluetooth-outline';
+      this.currPosition.loc = res.loc;
+      this.sendNotification();
     } else {
-      this.currPosition.loc='';
-    this.currPosition.rssi='';
+      this.currPosition.loc = '';
+      this.currPosition.rssi = '';
       str = ``;
       colr = 'warning';
-      hdr='No Device Found';
-      newIcon='alert-circle-outline';
+      hdr = 'No Device Found';
+      newIcon = 'alert-circle-outline';
+      this.sendNotification();
     }
-    
 
-    this.currPosition.color=colr;
-    this.currPosition.text=str;
-    this.currPosition.icon=newIcon;
-    this.currPosition.header =hdr;
+
+    this.currPosition.color = colr;
+    this.currPosition.text = str;
+    this.currPosition.icon = newIcon;
+    this.currPosition.header = hdr;
     console.log(this.currPosition)
-    // const toast = await this.toastController.create({
-    //   header: hdr,
-    //   message: str,
-    //   icon: newIcon,
-    //   position: 'top',
-    //   color: colr,
-    //   buttons: [
-    //     // {
-    //     //   side: 'start',
-    //     //   icon: 'star',
-    //     //   text: 'Favorite',
-    //     //   handler: () => {
-    //     //     console.log('Favorite clicked');
-    //     //   }
-    //     // }, 
-    //     {
-    //       text: 'Close',
-    //       role: 'cancel',
-    //       handler: () => {
-    //         console.log('Cancel clicked');
-    //       }
-    //     }
-    //   ]
+  }
+  sendNotification() {
+    // Schedule a single notification
+    // this.localNotifications.schedule({
+    //   id: 1,
+    //   text: 'BLE-Notifications',
+    //   // sound: isAndroid ? 'file://sound.mp3' : 'file://beep.caf',
+    //   data: { mydata: this.currPosition.text }
     // });
-    // await toast.present();
-
-    // const { role } = await toast.onDidDismiss();
-    // console.log('onDidDismiss resolved with role', role);
   }
 
   ngOnDestroy() {
@@ -317,6 +334,8 @@ export class LayoutComponent implements OnInit, DoCheck {
     this.kill()
   }
   kill() {
+    this.watch.unsubscribe();
     this.scanSubs.unsubscribe();
+    this.subscription.unsubscribe()
   }
 }

@@ -1,12 +1,13 @@
 <ion-content color="light" [fullscreen]="true">
 
-
+  <div [style.top.px]="locationList[0].x" [style.left.px]="locationList[0].y" class="myble">
+    BLE
+  </div>
 
   <div class="zoom-box">
     <ion-slides pager="true" [options]="slideOpts">
       <ion-slide>
         <div class="swiper-zoom-container">
-
 
           <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
             x="0px" y="0px" width="869px" height="1817px" viewBox="0 0 869 1817" enable-background="new 0 0 869 1817"
@@ -2699,21 +2700,80 @@ WHRkYXRlOm1vZGlmeQAyMDIyLTAzLTAzVDEzOjE4OjM1KzAwOjAw9yQfXQAAAABJRU5ErkJggg==" />
 
 
   <div *ngIf="currPosition.lat" class="position">
-    <ion-card [color]="currPosition.color">
-      <ion-card-header>{{currPosition.header}}</ion-card-header>
-      <ion-card-content>
-        {{currPosition.text}}
-      </ion-card-content>
-      <ion-card-content *ngIf="currPosition.rssi">
-        <ion-card-subtitle>Curr. Location</ion-card-subtitle>
+    <ion-card class="bottom-cnt">
+      <ion-grid>
+        <ion-row class="ion-justify-content-start">
+          <ion-col class="ion-no-padding">
+            <ion-card-header class="ion-no-padding">{{currPosition.header}}</ion-card-header>
+          </ion-col>
+        </ion-row>
 
-        {{currPosition.loc}}
-      </ion-card-content>
+        <ion-row class="ion-justify-content-start">
+          <ion-col class="ion-no-padding" size="3">
+            <div style="height: 100%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+              <ion-icon [color]="currPosition.color" size="large" name="bluetooth-outline"></ion-icon>
+
+            </div>
+          </ion-col>
+
+          <ion-col size="9">
+            <!-- <div> -->
+            <ion-card-content>
+              {{currPosition.text}}
+              <!-- <div class="flexcss">
+                <div>MAC  : {{currPosition.x}}</div>
+                <div>RSSI : {{currPosition.y}}</div>
+                <div>Name : {{currPosition.z}}</div>
+              </div> -->
+            </ion-card-content>
+
+            <!-- </div> -->
+          </ion-col>
+
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="12">
+            <ion-card-content class="ion-no-padding" color="dark" *ngIf="currPosition.rssi">
+              <ion-card-subtitle>
+                <ion-badge color="success">
+
+                Curr. Location : {{currPosition.loc}}
+                </ion-badge>
+              </ion-card-subtitle>
+            </ion-card-content>
+          </ion-col>
+          <ion-col size="12">
+            <div class="flexcss">
+              <div>
+                <ion-badge>
+                  X : {{currPosition.x?currPosition.x:''}}
+                </ion-badge>
+              </div>
+              <div>
+                <ion-badge>
+
+                  Y : {{currPosition.y}}
+                </ion-badge>
+              </div>
+              <div>
+                <ion-badge>
+                  Z : {{currPosition.z}}
+                </ion-badge>
+              </div>
+            </div>
+          </ion-col>
+          <!-- <ion-col size="12">
+            <div>cX : {{currPosition.currx}},</div>
+            <div>cY : {{currPosition.curry}},</div>
+            <div>cZ : {{currPosition.currz}}</div>
+          </ion-col> -->
+        </ion-row>
+
+      </ion-grid>
+
     </ion-card>
-    <!-- <div>{{currPosition.datetime | date:'dd/MM HH:mm:s'}}</div>
 
-    <div>Lat:{{currPosition.lat?currPosition.lat:''}}</div>
-    <div>Lng:{{currPosition.lng?currPosition.lng:''}}</div> -->
   </div>
 
   <!-- <div *ngIf="currPosition.lat" class="loc-position">

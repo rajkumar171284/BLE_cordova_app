@@ -1,6 +1,32 @@
-ion-icon{
-    // font-size: 5em !important;
-}
+
 ion-avatar{
     // padding: 5em;
 }
+ion-item{
+    text-transform: uppercase;
+}
+.icon {
+    display: inline-block;
+    font-size: 35px;
+    // color: #ffC977;
+    vertical-align: middle;
+   }
+ion-card{
+    // height: 20vh;
+}
+.switch1{
+    --ion-background-color:#8EBBFD !important;
+}
+
+.switch2{
+    --ion-background-color:#d7c19d !important;
+}
+
+.switch3{
+    --ion-background-color:#96DED1 !important;
+}
+
+.switch4{
+    --ion-background-color:#FFB2FF !important;
+}
+

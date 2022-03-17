@@ -2,13 +2,13 @@
 
   <div [ngClass]="{'flex-container-scanned':isScanned,'flex-container-init':!isScanned}" class="flex-container">
 
-    <div [ngClass]="{'flex-scaning':isScanned,'flex-init':!isScanned}" class="flex-content ">
-      <ion-button color="none" (click)="scan()">
+    <div (click)="scan()" [ngClass]="{'flex-scaning':isScanned,'flex-init':!isScanned}" class="flex-content ">
+      <ion-label color="light" >
         <!-- <ion-icon name="scan-outline"></ion-icon>   -->
         {{isScanned?'Scanning ...':'Scan'}}
         <!-- {{data.length}} -->
-      </ion-button>
-      <ion-button slot="end" *ngIf="isScanned" color="medium" (click)="stopScan()">
+      </ion-label>
+      <ion-button slot="end" *ngIf="isScanned" color="medium" (click)="stopScan($event)">
         <!-- <ion-icon name="scan-outline"></ion-icon>   -->
         Stop
 
@@ -30,7 +30,7 @@
   <cdk-virtual-scroll-viewport minBufferPx="200" maxBufferPx="400" itemSize="50">
     <ion-list>
       
-      <ion-item *cdkVirtualFor="let item of deviceList | order:'SNo'" class="example-item">
+      <ion-item *cdkVirtualFor="let item of deviceList" class="example-item">
 
         <ion-card [color]="item.isBLEMatched?'mybg':'blue3'">
 
