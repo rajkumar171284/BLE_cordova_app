@@ -1,0 +1,6 @@
+{
+	"appId": "com.ble.iot",
+	"appName": "bcord",
+	"webDir": "www",
+	"bundledWebRuntime": false
+}

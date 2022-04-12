@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, DoCheck } from '@angular/core';
+import { Component, OnInit, Renderer2, NgZone, DoCheck, ViewChild, ElementRef, AfterViewInit, HostBinding, HostListener } from '@angular/core';
 import { Main, bleList, bleDOMClass, dataparams } from '../main'
 import { Observable, of, Subscription } from 'rxjs';
 // import { element } from 'protractor';
@@ -9,11 +9,15 @@ const valModel = new Main();
 import { IotLabLayoutPage } from '../pages/iot-lab-layout/iot-lab-layout.page';
 import { ModalController } from '@ionic/angular';
 import * as _ from 'lodash';
+import { style, animate, animation, animateChild, useAnimation, group, sequence, transition, state, trigger, query, stagger } from '@angular/animations';
 
 import { ActionSheetController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
 // import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@awesome-cordova-plugins/device-motion/ngx';
+import { IonSlides } from '@ionic/angular';
+import { ApiService } from '../api.service';
+
 
 
 @Component({
@@ -21,85 +25,219 @@ import { DeviceMotion, DeviceMotionAccelerationData } from '@awesome-cordova-plu
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
   providers: [BLE, Geolocation, DeviceMotion],
+  animations: [
+
+
+    // trigger('widthGrow', [
+    //   state('closed', style({
+    //     width: 0,
+    //   })),
+    //   state('open', style({
+    //     width: 400
+    //   })),
+
+    //   transition('* => *', animate(150)),
+
+    // ]),
+    // trigger('sateBLE2', [
+    //   state('closed2', style({
+    //     width: 0
+    //   })),
+    //   state('open2', style({
+    //     width: 400
+    //   })),
+    //   transition('* => *', animate(150))
+
+    // ]),
+    trigger('size', [
+
+      state('large', style({
+        height: '400px'
+      })),
+      state('none', style({
+        height: '0px'
+      })),
+
+      transition('none => large', animate('300ms')),
+      transition('large => none', animate('300ms')),
+
+      // transition('empty => large', animate('300ms')),
+      // transition('no => large', animate('300ms')),
+    ]),
+
+    trigger('transition', [
+      state('init', style({
+        transform: 'translate3d(-24px, 197px, 0px) scale(1.8)'
+      })),
+      state('position1', style({
+        transform: 'translate3d(-24px, 1000px, 0px) scale(5)'
+      })),
+      state('position2', style({
+        transform: 'translate3d(-304px, 600px, 0px) scale(5)'
+      })),
+      state('position3', style({
+        transform: 'translate3d(24px, 600px, 0px) scale(5)'
+      })),
+      state('position4', style({
+        transform: 'translate3d(-354px, -100px, 0px) scale(5)'
+      })),
+
+      transition('init=>position1', animate('400ms ease-in-out')),
+      transition('init=>position2', animate('400ms ease-in-out')),
+      transition('init=>position3', animate('400ms ease-in-out')),
+      transition('init=>position4', animate('400ms ease-in-out')),
+
+      transition('position1=>init', animate('400ms ease-in-out')),
+      transition('position2=>init', animate('400ms ease-in-out')),
+      transition('position3=>init', animate('400ms ease-in-out')),
+      transition('position4=>init', animate('400ms ease-in-out')),
+
+    ])
+
+  ],
+
 })
-export class LayoutComponent implements OnInit, DoCheck {
+export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
+  state = "closed";
+
+  size = 'none';
+  sizeImg1 = 'none';
+  sizeImg2 = 'none';
+  sizeImg3 = 'none';
+  transForm: string = 'init';
+  // @ViewChild("mySlider") mySlider: ElementRef;
+
+  // public animateProfile = true;
+  // @HostListener('window:scroll')
+
   dataParams = new dataparams();
-  deviceList: any = valModel.staticList;
+  deviceList: any = [];
   imgData: bleList[] = [];
   locationList = [];
   currPosition: any = {
     lat: '', lng: '', datetime: '', error: '', header: '', text: '', loc: '', distance: '', rssi: ''
-    , x: '', y: '', z: '',currx:'',curry:'',currz:''
+    , x: '', y: '', z: '', currx: '', curry: '', currz: ''
   }
   watch: Subscription;
   scanSubs: Subscription;
   slideOpts: any = {
     zoom: {
-      minRatio: 1,
-      maxRatio: 10,
+      minRatio: 10,
+      maxRatio: 12,
       toggle: true,
       containerClass: 'swiper-zoom-container',
-      zoomedSlideClass: 'swiper-slide-zoomed'
+      zoomedSlideClass: 'swiper-slide-zoomed',
+      effect: 'flip',
+
     }
 
 
   }
   subscription: Subscription;
-  constructor(private deviceMotion: DeviceMotion, public toastController: ToastController, public actionSheetController: ActionSheetController, public modalController: ModalController, private geolocation: Geolocation, private platform: Platform, private ble: BLE, private zone: NgZone) { }
+  show: boolean = false;
+  svgElement = document.getElementById('layout')
+  constructor(private renderer: Renderer2, private api: ApiService, private deviceMotion: DeviceMotion, public toastController: ToastController, public actionSheetController: ActionSheetController, public modalController: ModalController, private geolocation: Geolocation, private platform: Platform, private ble: BLE, private zone: NgZone) {
+    // this.api.getBLEList().subscribe(res => {
+    //   if (res) {
+    //     this.dataParams.data = res;
+    //     console.log(this.dataParams.data)
+    //     this.deviceList = this.dataParams.data;
+    //     this.show=true;
+
+    //   }
+    // })
+    this.deviceList = valModel.staticList;
+  }
+  imgWidth = '500';
+  imgX = '110';
+  imgY = '-180';
+  @ViewChild(IonSlides) slides: IonSlides;
+
+  currState: boolean = false;
+  ngAfterViewInit() {
+    // this.scrollToPosition();
+    // this.gotoTop()        
+  }
+  multipleState: string = 'state1';
+
+  changeState(): void {
+
+    this.transForm = 'position4'
+    if (this.currPosition.loc == 'IoT-Team') {
+      this.transForm = 'position1'
+
+      this.size = 'none';
+      this.sizeImg2 = 'none';
+      this.sizeImg3 = 'none';
+      this.sizeImg1 = 'large';
+      // console.log('1', this.size, this.sizeImg1)
+
+    } else if (this.currPosition.loc == 'IoT-Lab') {
+      this.transForm = 'position2';
+      this.size = 'large';
+      this.sizeImg1 = 'none';
+      this.sizeImg2 = 'none';
+      this.sizeImg3 = 'none';
+    }
+    else if (this.currPosition.loc == 'Network-Team') {
+      this.transForm = 'position3';
+      this.size = 'none';
+      this.sizeImg1 = 'none';
+      this.sizeImg2 = 'large';
+      this.sizeImg3 = 'none';
+      // console.log('2', this.size, this.sizeImg1)
+    }
+    else if (this.currPosition.loc == 'ISL-Entrance') {
+      this.transForm = 'position4';
+      this.size = 'none';
+      this.sizeImg1 = 'none';
+      this.sizeImg2 = 'none';
+      this.sizeImg3 = 'large';
+      // console.log('2', this.size, this.sizeImg1)
+    } else {
+      this.size = 'none';
+      this.sizeImg1 = 'none';
+      this.sizeImg2 = 'none';
+      this.sizeImg3 = 'none';
+      this.transForm = 'init'
+
+    }
+  }
+
 
   ngOnInit() {
 
-    this.locationList = valModel.locationList.map(a => {
+    this.pageLoad()
+    // this.locationList = valModel.locationList.map(a => {
 
-      a.x = a.x * 50;
-      a.y = a.y * 150;
-      return a
-    })
+    //   a.x = a.x * 50;
+    //   a.y = a.y * 150;
+    //   return a
+    // })
 
     // this.presentModal()
-    // if (document.getElementById('ble1')) {
 
-    //   const xy = document.getElementById('ble1');
 
-    //   var value = Math.abs(-10);
-
-    //   // xy.setAttribute('fill','')
-    //   console.log(value.toString())
-    //   xy.setAttribute('r', value.toString());
-
-    // }
-    this.findNearestBLE();
-    this.pageLoad()
-
-    // Get the device current acceleration
-    // this.deviceMotion.getCurrentAcceleration().then(
-    //   (acceleration: DeviceMotionAccelerationData) => {
-    //     console.log(acceleration)
-    //     this.currPosition.currx = acceleration.x;
-    //     this.currPosition.curry = acceleration.y;
-    //     this.currPosition.currz = acceleration.z;
-    //   },
-    //   (error: any) => console.log(error)
-    // );
-
+    // this.slides.zoom
 
     // Watch device acceleration
-    this.subscription = this.deviceMotion.watchAcceleration().subscribe((acceleration: DeviceMotionAccelerationData) => {
-      console.log(acceleration);
-      this.currPosition.x = acceleration.x;
-      this.currPosition.y = acceleration.y;
-      this.currPosition.z = acceleration.z;
-    });
+    // this.subscription = this.deviceMotion.watchAcceleration().subscribe((acceleration: DeviceMotionAccelerationData) => {
+    //   // console.log(acceleration);
+    //   this.currPosition.x = acceleration.x;
+    //   this.currPosition.y = acceleration.y;
+    //   this.currPosition.z = acceleration.z;
 
+    // });
+
+  }
+  loadPage() {
+
+    this.pageLoad()
   }
   findNearestBLE() {
     let near = _.orderBy(this.deviceList, 'Distance', 'asc')
-
-    // console.log(near)
-
-    // this.presentActionSheet(near[0])
     this.presentToastWithOptions(near[0])
-
+    // console.log(near)
   }
   ngDoCheck() {
     // console.log('check')    
@@ -134,7 +272,6 @@ export class LayoutComponent implements OnInit, DoCheck {
           this.currPosition.lat = data.coords.latitude;
           this.currPosition.lng = data.coords.longitude;
           this.currPosition.datetime = data.timestamp;
-          // console.log(this.currPosition)
           this.scan();
         }
       });
@@ -143,27 +280,10 @@ export class LayoutComponent implements OnInit, DoCheck {
 
   }
   scan() {
-
-    // this.isScanned = true;
-
     this.imgData = []; // clear list
-    // console.log('Start scanning');
     this.scanSubs = this.ble.scan([], 300).subscribe(res => {
-      // console.log('res', res)
       this.updatedata(res);
 
-      // this.ble.isLocationEnabled().then((loc) => {
-      //   console.log('loc', loc)
-      // })
-      // this.ble.startStateNotifications().subscribe(state => {
-
-      //   if (state && (state.toLowerCase() == 'on')) {
-      //     console.log('on state', state)
-      //   } else {
-      //     console.log(' state', state)
-      //   }
-
-      // })
     });
   }
 
@@ -172,15 +292,13 @@ export class LayoutComponent implements OnInit, DoCheck {
       let result = this.filterList(res);
       // console.log('result', result);      
       this.imgData.push(result)
-      if (this.imgData.length > 0) {
+      if (this.imgData.length > 0 && this.deviceList.length > 0) {
         for (let a of this.deviceList) {
           let index = this.imgData.findIndex(ele => {
             return ele.id == a.id;
           })
           if (index != -1) {
-            // id matches   
-            console.log('a', a);
-
+            // id matches               
             const data = this.imgData[index];
             // make active
             a.active = data.active;
@@ -194,26 +312,20 @@ export class LayoutComponent implements OnInit, DoCheck {
             } else if (data.N == 2) {
               a.strengthColor = '#ff0000'
             }
-
-            //set fill value for svg circle tag
-            // if (document.getElementById('ble1')) {
-            //   const value = a.rssi;
-            //   const xy = document.getElementById('ble1');              
-            //   xy.setAttribute('r', value.toString());
-            //   console.log(xy)
-            // }
+            a.deviceColor = a.strengthColor;
+            a.circleColor = data.circleColor;
           }
         }
         this.findNearestBLE();
       }
     });
 
-    console.log('this.imgData', this.imgData)
+    // console.log('this.imgData', this.imgData)
 
   }
 
   filterList(x: any) {
-    console.log('x', x)
+    // console.log('x', x)
     let newDevice = new bleDOMClass();
     newDevice.getDistance(x.rssi)
     newDevice.rssi = x.rssi;
@@ -222,23 +334,32 @@ export class LayoutComponent implements OnInit, DoCheck {
     newDevice.getDistance(x.rssi)
     newDevice.isBLEMatched = false;
     newDevice.active = 'Active';
+    // console.log(newDevice.circleColor)
+
     return newDevice;
   }
   // myRadius;
   myRadius() {
-    console.log('ds')
+    // console.log('ds')
   }
-  getBLE(mac: string, type: string) {
+  getBLE(record: number, type: string) {
+    // console.log('ds',type)
+    if (this.deviceList.length == 0) {
+      return;
+    }
     let arr: bleList[] = this.deviceList.filter((x: bleList) => {
-      return x.id === mac;
+      return x.SNo === record;
     })
     if (arr.length) {
+      // console.log('ds',type)
+
       let meters: any;
       if (arr[0].Distance) {
         meters = arr[0].Distance;
       }
-      return type == 'mac' ? arr[0].id : type == 'Dist' && arr[0].Distance ? `RSSI :${arr[0].rssi} at ${meters
-        } meters` : type == 'color' ? arr[0].strengthColor : type == 'status' ? arr[0].active : '';
+      return type == 'mac' ? arr[0].id : type == 'Dist' && arr[0].Distance ? `RSSI :${arr[0].rssi} @ ${meters
+        } meters` : type == 'color' ? arr[0].deviceColor : type == 'status' ? arr[0].active.toUpperCase() : '';
+
     } else {
       return ''
     }
@@ -257,34 +378,9 @@ export class LayoutComponent implements OnInit, DoCheck {
     return await modal.present();
   }
 
-  // async presentActionSheet(res: bleList) {
-  //   const actionSheet = await this.actionSheetController.create({
-  //     header: 'Nearest device you reached..',
-  //     cssClass: 'my-custom-class',
-  //     buttons: [{
-  //       text: `MAC:${res.id},RSSI:${res.rssi}`,
-  //       icon: 'bluetooth-outline',
-  //       data: 'Data value',
-  //       handler: () => {
-  //         console.log('Play clicked');
-  //       }
-  //     }, {
-  //       text: 'Cancel',
-  //       icon: 'return-down-back-outline',
-  //       role: 'cancel',
-  //       handler: () => {
-  //         console.log('Cancel clicked');
-  //       }
-  //     }]
-  //   });
-  //   await actionSheet.present();
-
-  //   const { role, data } = await actionSheet.onDidDismiss();
-  //   console.log('onDidDismiss resolved with role and data', role, data);
-  // }
 
   async presentToastWithOptions(res: bleList) {
-    console.log(res)
+    // console.log(res)
     this.currPosition.loc = '';
     this.currPosition.rssi = '';
 
@@ -293,19 +389,40 @@ export class LayoutComponent implements OnInit, DoCheck {
     let hdr;
     let newIcon: string;
     if (res.Distance && res.rssi) {
+      this.currPosition.id = res.id;
       this.currPosition.rssi = `${res.rssi}`;
-      str = `MAC:${res.id} ,RSSI:${res.rssi}`;
+      str = `MAC:${res.id} ,RSSI:${res.rssi} at a distance of ${res.Distance} meters`;
       colr = 'success';
-      hdr = 'The device you reached is..';
+      hdr = 'Nearby BLE is,';
       newIcon = 'bluetooth-outline';
       this.currPosition.loc = res.loc;
+      this.currPosition.distance = res.Distance;
+      this.currPosition.circleColor = res.circleColor;
       this.sendNotification();
+      const item = new bleDOMClass()
+      const state = item.getNearByLocated(this.currPosition.distance);
+      if (state) {
+        this.currState = state;
+        this.isLocated(this.currPosition, this.currPosition.loc);
+      } else {
+        // if out of range
+        this.currState = state;
+        this.size = 'none';
+        this.sizeImg1 = 'none';
+        this.sizeImg2 = 'none';
+        this.sizeImg3 = 'none';
+        this.transForm = 'init'
+
+      }
+      console.log(this.currState)
     } else {
+      this.currPosition.circleColor = ''
       this.currPosition.loc = '';
       this.currPosition.rssi = '';
+      this.currPosition.id = '';
       str = ``;
       colr = 'warning';
-      hdr = 'No Device Found';
+      hdr = 'No Active Device';
       newIcon = 'alert-circle-outline';
       this.sendNotification();
     }
@@ -315,7 +432,7 @@ export class LayoutComponent implements OnInit, DoCheck {
     this.currPosition.text = str;
     this.currPosition.icon = newIcon;
     this.currPosition.header = hdr;
-    console.log(this.currPosition)
+    console.log('this.currPosition', this.currPosition)
   }
   sendNotification() {
     // Schedule a single notification
@@ -327,6 +444,9 @@ export class LayoutComponent implements OnInit, DoCheck {
     // });
   }
 
+  createNewBLE(e) {
+
+  }
   ngOnDestroy() {
     this.kill()
   }
@@ -338,4 +458,70 @@ export class LayoutComponent implements OnInit, DoCheck {
     this.scanSubs.unsubscribe();
     this.subscription.unsubscribe()
   }
+
+  isLocated(ble: any, loc: string) {
+    // console.log('isLocated', ble.loc, loc)    
+    // var circle = document.getElementById(loc);
+    this.changeState();
+    // console.log('state', circle)
+    // var interval = 30;
+    // var angle = 20;
+    // var angle_increment = 6;
+    // circle.setAttribute("stroke-dasharray", angle + ", 20000");
+
+
+  }
+
+
+  isShow: boolean;
+  topPosToStartShowing = 100;
+  checkScroll() {
+
+    // window의 scroll top
+    // Both window.pageYOffset and document.documentElement.scrollTop returns the same result in all the cases. window.pageYOffset is not supported below IE 9.
+
+    const scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop || 0;
+
+    console.log('[scroll]', scrollPosition);
+
+    if (scrollPosition >= this.topPosToStartShowing) {
+      this.isShow = true;
+    } else {
+      this.isShow = false;
+    }
+  }
+
+  // TODO: Cross browsing
+  gotoTop() {
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
+
+  jonu(x) {
+    // // console.log(x)
+    // const circle = document.getElementById('IoT-Team');
+    // var myTimer = document.getElementById('myTimer');
+    // var interval = 30;
+    // var angle = 20;
+    // var angle_increment = 6;
+    // // this.isLocated(this.deviceList[0], this.deviceList[0].loc)
+    // // circle.setAttribute("stroke", 'blue');
+    // circle.setAttribute("stroke-dasharray", angle + ", 20000");
+
+
+
+    // circle.scrollTop += 140;
+
+
+  }
+
+  private zoomImage() {
+
+  }
 }
+
+
+

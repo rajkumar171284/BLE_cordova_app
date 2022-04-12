@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "bleapp-a7449": {
+      "hosting": {
+        "app": [
+          "bleapp-a7449"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "bleapp-a7449"
+  }
+}

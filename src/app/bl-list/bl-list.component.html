@@ -26,66 +26,92 @@
   <!-- <div class="flex-container2"> -->
 
 
-    <div class="wbg">
-      <ion-grid>
-        <ion-row>
-          <ion-col>
+  <div class="wbg">
+    <ion-grid>
+      <ion-row>
+        <ion-col size="4">
+          <ion-badge (click)="getListbyStatus('a')">
             <ion-card-subtitle color="light">
-              {{deviceList.length?'Available Device(s)':isScanned && deviceList.length==0?'No Device Found':''}}
+              {{deviceList.length?'All Device(s)':isScanned && deviceList.length==0?'No Device Found':''}}
             </ion-card-subtitle>
-          </ion-col>
-        </ion-row>
-      </ion-grid>
-    </div>
-    <div class="wbg2">
+          </ion-badge>
+        </ion-col>
+        <ion-col size="4">
+          <ion-badge (click)="getListbyStatus('Active')">
+            <ion-card-subtitle color="light">
+              {{deviceList.length?'Active':isScanned && deviceList.length==0?'No Device Found':''}}
+            </ion-card-subtitle>
+          </ion-badge>
+        </ion-col>
+        <!-- <ion-col size="4">            
+            <ion-badge (click)="getListbyStatus('In-Active')">
+              <ion-card-subtitle color="light">
+                {{deviceList.length?'InActive':isScanned && deviceList.length==0?'No Device Found':''}}
+              </ion-card-subtitle>
+            </ion-badge>
+          </ion-col> -->
+      </ion-row>
+    </ion-grid>
+  </div>
+  <div class="wbg2">
+    <cdk-virtual-scroll-viewport minBufferPx="200" maxBufferPx="400" itemSize="50">
 
-      <cdk-virtual-scroll-viewport minBufferPx="200" maxBufferPx="400" itemSize="50">
-       
-            <ion-card *cdkVirtualFor="let item of deviceList" [color]="item.isBLEMatched?'mybg':'shade1'">
+      <ion-card (click)="!item.loc?selectBLE(item):''" *cdkVirtualFor="let item of deviceList | order :listStatus" [color]="item.isBLEMatched?'mybg':'shade1'">
 
-              <ion-grid>
-                <ion-row class="ion-justify-content-start">
-                  <ion-col size="3">
-                    <div>
-                      <ion-img src="assets/bluetooth.png"></ion-img>
-                    </div>
-                  </ion-col>
+        <ion-grid>
+          <ion-row class="ion-justify-content-start">
+            <ion-col size="2">
+              <div>
+                <ion-img src="assets/inactiveBLE.png"></ion-img>
+              </div>
+            </ion-col>
 
-                  <ion-col size="7">
-                    <div>
+            <ion-col size="8">
+              <div>
 
-                      <ion-card-header>
+                <ion-card-header class="ion-no-padding">
 
-                        <ion-card-subtitle>{{item.id}}</ion-card-subtitle>
-                      </ion-card-header>
+                  <ion-card-subtitle>{{item.id}}</ion-card-subtitle>
+                </ion-card-header>
 
-                      <ion-card-content>
-                        <ion-card-subtitle>RSSI:{{item.rssi}}</ion-card-subtitle>
-                        <ion-card-subtitle>
-                          {{ item.name?item.name:'' }}
+                <ion-card-content class="ion-no-padding">
+                  <ion-card-subtitle>RSSI:{{item.rssi}}</ion-card-subtitle>
+                  <ion-card-subtitle slot="end">
+                    {{ item.name?item.name:'' }}
 
-                        </ion-card-subtitle>
-                      </ion-card-content>
+                  </ion-card-subtitle>
+                  <ion-card-subtitle>
+                    {{ item.Distance?'at':'' }} {{ item.Distance?item.Distance:'' }}
+                    {{ item.Distance?'meters':'' }}
 
-                    </div>
-                  </ion-col>
+                  </ion-card-subtitle>
 
-                  <ion-col size="2">
-                    <div>
-                      <ion-icon *ngIf="item.isBLEMatched" size="large" [color]="item.color"
+                </ion-card-content>
+
+              </div>
+            </ion-col>
+
+            <ion-col size="2">
+              <div>
+                <ion-icon size="large" [color]="item.strengthColor" name="cellular-outline"></ion-icon>
+                <!-- <ion-icon *ngIf="item.isBLEMatched" size="large" [color]="item.color"
                         name="checkmark-circle-outline">
-                      </ion-icon>
-                      <!-- <ion-card-subtitle>{{item.isBLEMatched?'Match Found':'No Match'}}
+                      </ion-icon> -->
+                <!-- <ion-card-subtitle>{{item.isBLEMatched?'Match Found':'No Match'}}
                   </ion-card-subtitle> -->
-                    </div>
-                  </ion-col>
-                </ion-row>
 
-              </ion-grid>
-            </ion-card>
+              </div>
+              <!-- <div *ngIf="!item.loc">
+                <ion-text color="primary">Add</ion-text>
+              </div> -->
+            </ion-col>
+          </ion-row>
+
+        </ion-grid>
+      </ion-card>
 
 
-      </cdk-virtual-scroll-viewport>
-    </div>
+    </cdk-virtual-scroll-viewport>
+  </div>
   <!-- </div> -->
 </ion-content>

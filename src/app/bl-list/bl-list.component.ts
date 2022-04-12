@@ -1,12 +1,12 @@
 import { Component, OnInit, NgZone, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import { BLE } from '@awesome-cordova-plugins/ble/ngx';
 import { Platform } from '@ionic/angular';
-
+import { Router } from '@angular/router';
 import { Main, bleList, bleDOMClass, dataparams } from '../main'
 import { Observable, of, Subscription } from 'rxjs';
 import { element } from 'protractor';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
-
+import { ApiService } from '../api.service';
 const valModel = new Main();
 
 // import {
@@ -41,24 +41,37 @@ const valModel = new Main();
 export class BlListComponent implements OnInit, OnDestroy, OnChanges {
   dataParams = new dataparams();
   isScanned: boolean = false;
-
-  deviceList: bleList[] = [];
+  allDevices: any = [];
+  deviceList: any = [];
   newObservable: Subscription | undefined;
-  constructor(private platform: Platform, private geolocation: Geolocation, private ble: BLE, private zone: NgZone) {
-
+  listStatus: string = 'a';
+  statusMessage: any;
+  constructor(private router:Router ,private api: ApiService, private platform: Platform, private geolocation: Geolocation, private ble: BLE, private zone: NgZone) {
 
   }
 
   interval: any;
   interval2: any;
   currPosition: any = {};
+  ionViewWillEnter(){
+    console.log("ionViewWillEnter")
+  }
+  
   ngOnInit() {
     this.isScanned = false;
-    this.deviceList = [];
-
     this.deviceList = valModel.staticList.map((x: bleList, i) => {
       return x;
     })
+    this.deviceList = this.dataParams.data;
+
+    // this.api.getBLEList().subscribe(res => {
+    //   if (res) {
+    //     this.dataParams.data = res;
+    //     console.log(this.dataParams.data)
+    //     this.deviceList = this.dataParams.data;
+    //   }
+    // })
+
     console.log(this.deviceList)
 
     // this.interval2 = setInterval(() => {
@@ -91,22 +104,23 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
 
   ngOnChanges(changes: SimpleChanges) {
     this.isScanned = false;
-    this.deviceList = [];
+    // this.deviceList = [];
   }
   scan() {
     this.isScanned = true;
-    console.log('Start scanning');
+    // console.log('Start scanning');
     this.platform.ready().then(() => {
       let watch = this.geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000 });
       watch.subscribe((data: any) => {
         // console.log(data)
         if (data && data.coords) {
+          this.allDevices = [];
           this.currPosition.lat = data.coords.latitude;
           this.currPosition.lng = data.coords.longitude;
           this.currPosition.datetime = data.coords.timestamp;
-          this.ble.scan([], 15).subscribe(res => {
-            // console.log('res', res)
-            this.updatedata(res);
+          this.ble.scan([], 5).subscribe(res =>
+            this.updatedata(res),
+            error => this.scanError(error)
             // this.ble.startStateNotifications().subscribe(state => {
             //   // console.log('state', state)
             //   if (res.id) {
@@ -116,7 +130,9 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
             // })
 
 
-          });
+          );
+          setTimeout(() => { this.setStatus('Scan complete') }, 5000)
+          // setTimeout(this.setStatus('Scan complete'), 5000, 'Scan complete');
         }
 
       });
@@ -124,7 +140,23 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
     })
 
   }
-
+  // If location permission is denied, you'll end up here
+  scanError(error) {
+    console.log(error)
+    // this.setStatus('Error ' + error);
+    // let toast = this.toastCtrl.create({
+    //   message: 'Error scanning for Bluetooth low energy devices',
+    //   position: 'middle',
+    //   duration: 5000
+    // });
+    // toast.present();
+  }
+  setStatus(message) {
+    console.log(message);
+    this.zone.run(() => {
+      this.statusMessage = message;
+    });
+  }
   public stateSuccess = function (device) {
     console.log('rssi' + device);
 
@@ -139,59 +171,64 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
     })
   }
 
-  updatedata(res) {
-    // console.log('upt',res)
-    this.zone.run(async () => {
-      this.filterList(res);
-      // let result = await this.filterList(res);
-      // if(result.id){
+  updatedata(x) {
+    // console.log('upt', x)
+    this.zone.run(() => {
+      // this.filterList(x);
+      const list = this.formatList(x);
+      this.allDevices.push(list)
+      // console.log(this.allDevices)
+      this.deviceList = this.allDevices.map(ble => {
+        let index = this.dataParams.data.findIndex(item => {
+          return item.id == ble.id;
+        })
+        if (index != -1) {
+          // found
+          const newBLE = this.dataParams.data[index];
+          ble.isBLEMatched = true;
+          ble.color = 'success';
+          ble.active = 'Active';
+        } else {
+          ble.isBLEMatched = false;
+          ble.color = 'warning';
+          ble.active = 'in-Active';
+        }
+        return ble;
+      })
+      // console.log(this.allDevices)
 
-      // }
-      // this.deviceList.push(result);
     });
+
     console.log('this.deviceList', this.deviceList)
   }
-  async filterList(x: bleList) {
+  formatList(x: bleList) {
     // console.log('x', x)
-    x.isBLEMatched = false;
-    let newlist = new bleDOMClass();
-    newlist.id=x.id;
-    newlist.rssi = x.rssi;
-    newlist.name = x.name ? x.name : '';
-    newlist.getDistance(x.rssi)
-    newlist.isBLEMatched = false;
-    
-    this.deviceList.forEach((element, index) => {
-      if (element.id == x.id) {
-        // if matched
-        x.isBLEMatched = true;        
-        // element.SNo = index + 1;
-        element.isBLEMatched = true;
-        element.rssi = x.rssi;
-        element.Distance = newlist.Distance;
-        element.color = 'warning';
+    if (x.id) {
+      x.isBLEMatched = false;
+      let newlist = new bleDOMClass();
+      newlist.id = x.id;
+      newlist.rssi = x.rssi;
+      newlist.name = x.name ? x.name : '';
+      newlist.getDistance(x.rssi)
+      newlist.color = 'warning';
+      newlist.isBLEMatched = false;
+      newlist.active = 'In-Active';
+      return newlist;
 
-      } else {
-        newlist.color = 'success';
-        newlist.isBLEMatched = false;
-        let newIndex=this.deviceList.findIndex(a=>{
-           return a.id==newlist.id
-        })
-        if(newIndex==-1){
-        this.deviceList.push(newlist)
-        }
-      }
-    })
-    return x;
-
+    }
   }
 
-  // get stateName() {
-  //   return this.show ? 'show' : 'hide'
-  // }
+  selectBLE(item: any) {
+    if (item) {
+      this.router.navigate(['setBLE'],{
+        queryParams:item
+      })
+
+    }
+  }
 
   stopScan(e) {
-  e.stopPropagation();
+    e.stopPropagation();
     this.isScanned = false;
     this.ble.stopScan().then(() => {
       this.isScanned = false;
@@ -214,5 +251,8 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
     if (this.interval2) {
       clearInterval(this.interval2);
     }
+  }
+  getListbyStatus(status: any) {
+    this.listStatus = status;
   }
 }

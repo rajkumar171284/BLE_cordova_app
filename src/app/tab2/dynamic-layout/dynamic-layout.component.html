@@ -1,0 +1,101 @@
+<ion-content color="light" [fullscreen]="true">
+
+
+  <!-- <div [style.top.px]="locationList[0].x" [style.left.px]="locationList[0].y" class="myble">
+    BLE
+  </div> -->
+
+  <div class="zoom-box">
+    <div  appZoom id="layout" class="div1 layout">
+      <img  appDragdrop width="500"  height="250" src="assets/activeBLE.png" />
+
+      <div *ngFor="let a of deviceList" class="square">
+        {{a.id}}
+        <img  appDragdrop width="500"  height="250" src="assets/activeBLE.png" />
+
+      </div>
+      <!-- My First CSS Example -->
+      <!-- <span appDragdrop class="span1">IoT Team</span> -->
+      <span class="span1">Lab</span>
+      <!-- <p>This is a paragraph.</p> -->
+    </div>
+
+
+  </div>
+
+
+
+  <div *ngIf="deviceList.length>0 && currPosition.lat" class="position">
+    <ion-card class="bottom-cnt">
+      <ion-grid>
+        <ion-row class="ion-justify-content-start">
+          <ion-col class="ion-no-padding">
+            <ion-card-header class="ion-no-padding">{{currPosition.header}}</ion-card-header>
+            <!-- <ion-button (click)="changeState()">sdsds</ion-button> -->
+          </ion-col>
+        </ion-row>
+
+        <ion-row *ngIf="currPosition.rssi" class="ion-justify-content-start">
+          <ion-col class="ion-no-padding" size="2">
+            <div style="height: 100%;display: flex;flex-direction: row;align-items: center;justify-content: center;">
+              <ion-icon [color]="currPosition.color" size="large" name="bluetooth-outline"></ion-icon>
+
+            </div>
+          </ion-col>
+
+          <ion-col size="10">
+            <ion-card-content>
+              {{currPosition.text}}
+
+            </ion-card-content>
+
+
+          </ion-col>
+
+        </ion-row>
+
+        <ion-row>
+          <ion-col size="12">
+            <ion-card-content class="ion-no-padding" color="dark" *ngIf="currPosition.rssi && currState">
+              <ion-card-subtitle>
+                <ion-badge color="success">
+
+                  Curr. Location : {{currPosition.loc}}
+                </ion-badge>
+              </ion-card-subtitle>
+            </ion-card-content>
+          </ion-col>
+
+
+        </ion-row>
+
+      </ion-grid>
+
+    </ion-card>
+
+  </div>
+
+  <!-- <div *ngIf="currPosition.lat" class="loc-position">
+    <ion-col class="ion-no-padding" size="12">
+      <div class="flexcss">
+        <div>
+          <ion-badge>
+            X : {{currPosition.x?currPosition.x:'86876667676'}}
+          </ion-badge>
+        </div>
+        <div>
+          <ion-badge>
+
+            Y : {{currPosition.y?currPosition.y:'.4336656323'}}
+          </ion-badge>
+        </div>
+        <div>
+          <ion-badge>
+            Z : {{currPosition.z?currPosition.z:'09978675446'}}
+          </ion-badge>
+        </div>
+      </div>
+    </ion-col>
+  </div> -->
+
+</ion-content>

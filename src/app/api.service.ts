@@ -3,7 +3,9 @@ import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 
-import { environment } from '../environments/environment'
+import { environment } from '../environments/environment';
+import { Firestore, collectionData } from '@angular/fire/firestore';
+import { addDoc, collection } from '@firebase/firestore';
 const option = {
   headers: new HttpHeaders()
 }
@@ -13,8 +15,15 @@ const url = 'http://10.1.1.130:8081/mqtt'
 })
 export class ApiService {
 
-  constructor(private http: HttpClient) { }
-
+  constructor(private http: HttpClient, private firestore: Firestore) { }
+  getBLEList():Observable<any> {
+    const ref = collection(this.firestore, 'blelist');
+    return collectionData(ref) as Observable<any>;
+  }
+  addNewBLE(param:any){
+    const ref = collection(this.firestore, 'blelist');
+    return addDoc(ref,param);
+  }
   setLightControl(params): Observable<any> {
     return this.http.post(url + "/led_control", params, option).pipe(map((response: HttpResponse<any>) => {
       console.log(response)

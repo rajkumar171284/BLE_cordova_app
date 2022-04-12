@@ -1,0 +1,43 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="tertiary">
+    <ion-title>
+      Devices details 
+    </ion-title>
+  </ion-toolbar>
+</ion-header> 
+<ion-content>
+
+<ion-card>
+  <form [formGroup]="bleForm">
+    <ion-item>
+      <ion-label position="floating">Device Name</ion-label>
+      <ion-input type="text" formControlName="name"></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Device Id/MAC</ion-label>
+      <ion-input type="text" formControlName="id" readonly></ion-input>
+    </ion-item>
+    <ion-item>
+      <ion-label position="floating">Location</ion-label>
+      <ion-input type="text" formControlName="loc"></ion-input>
+    </ion-item>
+    <!-- <ion-item>
+      <ion-tab-button color="success" (click)="submit()">
+        <ion-icon name="checkmark-sharp"></ion-icon>
+       </ion-tab-button>
+    </ion-item> -->
+
+  </form>
+</ion-card>
+</ion-content>
+<ion-tab-bar class="r-footer" color="secondary" slot="bottom">
+  <ion-tab-button color="success" (click)="back()">
+    <ion-icon name="arrow-back-sharp"></ion-icon>
+    <!-- <ion-label >Exit</ion-label> -->
+  </ion-tab-button>          
+  <ion-tab-button color="success" (click)="submit()">
+    <ion-icon name="checkmark-sharp"></ion-icon>
+    <!-- <ion-label >Save</ion-label> -->
+  </ion-tab-button>
+
+</ion-tab-bar>

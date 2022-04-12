@@ -62,7 +62,7 @@ cdk-virtual-scroll-viewport {
     //  background:linear-gradient(45deg, #00CED1, #5A4FCF);
     --ion-background-color:#fff;
   }
-  ion-card,ion-card-subtitle{
+  ion-card ion-card-subtitle{
       color:#444
   }
   .wbg{
@@ -72,6 +72,7 @@ cdk-virtual-scroll-viewport {
   .wbg2{
     background-color:#fff;
     height: 100%;
+    padding-bottom: 2em;
   }
   .icondiv{
     align-items: center;

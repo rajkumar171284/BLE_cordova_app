@@ -11,19 +11,40 @@ export class bleDOMClass {
     N: number;//strength
     active: string = 'In-Active';
     strengthColor: string = '';
+    deviceColor: '#3880ff';
     loc: string;
     color = 'warning';
+    circleColor: string;
     getDistance(rssi: number): void {
         if (rssi >= -60 && rssi <= 0) {
-            this.N = 4
+            // this.N = 4;//not working properly, so setting by default 2
+            this.N = 2;
+            this.strengthColor = 'teritary';
+            this.circleColor = '#3880ff';
         } else if (rssi < -60 && rssi >= -70) {
-            this.N = 3
+            // this.N = 3;
+            this.N = 2;
+            this.strengthColor = 'success';
+            this.circleColor = '#00CC33';
+
         } else if (rssi < -70) {
-            this.N = 2
+            this.N = 2;
+            this.strengthColor = 'warning';
+            this.circleColor = '#e40000';
+
         }
         const distance = Math.pow(10, (Measured_Power - (rssi)) / (10 * this.N))
         this.Distance = parseFloat(distance.toFixed(2));
 
+    }
+
+    getNearByLocated(meter: number) {
+        console.log(meter)
+        if (meter <= .8) {
+            return true
+        } else {
+            return false
+        }
     }
 }
 
@@ -39,8 +60,10 @@ export interface bleList {
     N: number;//strength
     active: string;
     strengthColor: string;
+    deviceColor: string;
     loc: string;
-    color: string;
+    color: string; circleColor: string;
+
 }
 export interface bleStatic {
     name: string,
@@ -52,37 +75,61 @@ export class Main {
     staticList: any = [{
         'name': 'HC-08',
         'id': '10:08:2C:21:FE:EA', 'top': 80, 'left': 125,
-        'SNo': 111,
+        'SNo': 1,
         'rssi': null,
-        'strengthColor': '#00ff00',
+        'strengthColor': 'medium',
         'active': 'In-Active',
         'Distance': null,
         'isBLEMatched': false,
-        'loc': 'IoT - Team'
+        'loc': 'IoT-Team',
+        'deviceColor': '#3880ff',
+        'circleColor': ''
+
     },
     {
         'name': 'HC-08',
         'id': '34:14:B5:50:12:2A',
         'top': 180, 'left': 225,
-        'SNo': 122,
+        'SNo': 2,
         'rssi': null,
-        'strengthColor': '#ff0000',
+        'strengthColor': 'medium',
         'active': 'In-Active',
         'Distance': null,
         'isBLEMatched': false,
-        'loc': 'IoT - Lab'
+        'loc': 'IoT-Lab',
+        'deviceColor': '#3880ff',
+        'circleColor': ''
+
     },
     {
-        'name': 'Boult',
-        'id': 'C8:9B:D7:64:9B:14',
+        'name': 'HC-08',
+        'id': '34:14:B5:C5:70:E3',
         'top': 180, 'left': 50,
-        'SNo': 223,
-        'rssi': -80,
-        'active': 'In-Active',
-        'strengthColor': '#ff0000',
-        'Distance': 1.75678843,
+        'SNo': 3,
+        'rssi': null,
+        'active': 'in-Active',
+        'strengthColor': 'medium',
+        'Distance': null,
         'isBLEMatched': false,
-        'loc': 'ISL - Team'
+        'loc': 'Network-Team',
+        'deviceColor': '#3880ff',
+        'circleColor': ''
+
+    },
+    {
+        'name': 'HC-08',
+        'id': 'F8:33:31:A9:E3:26',
+        'top': 180, 'left': 50,
+        'SNo': 4,
+        'rssi': null,
+        'active': 'In-Active',
+        'strengthColor': 'medium',
+        'Distance': null,
+        'isBLEMatched': false,
+        'loc': 'ISL-Entrance',
+        'deviceColor': '#3880ff',
+        'circleColor': ''
+
     }
     ];
 

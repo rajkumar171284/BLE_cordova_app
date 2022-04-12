@@ -9,6 +9,7 @@ import { Tab1PageRoutingModule } from './tab1-routing.module';
 import { BlListComponent } from '../bl-list/bl-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { OrderPipe } from '../order.pipe';
+import { IotBleComponent } from '../iot-ble/iot-ble.component';
 
 @NgModule({
   imports: [
@@ -18,6 +19,6 @@ import { OrderPipe } from '../order.pipe';
     ExploreContainerComponentModule,
     Tab1PageRoutingModule,SharedModule 
   ],
-  declarations: [Tab1Page,BlListComponent,OrderPipe]
+  declarations: [Tab1Page,BlListComponent,OrderPipe,IotBleComponent]
 })
 export class Tab1PageModule {}
