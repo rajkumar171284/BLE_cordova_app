@@ -157,7 +157,6 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
 
   changeState(): void {
 
-    this.transForm = 'position4'
     if (this.currPosition.loc == 'IoT-Team') {
       this.transForm = 'position1'
 
