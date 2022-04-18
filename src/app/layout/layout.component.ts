@@ -9,7 +9,7 @@ const valModel = new Main();
 import { IotLabLayoutPage } from '../pages/iot-lab-layout/iot-lab-layout.page';
 import { ModalController } from '@ionic/angular';
 import * as _ from 'lodash';
-import { style, animate, animation, animateChild, useAnimation, group, sequence, transition, state, trigger, query, stagger } from '@angular/animations';
+import { style, animate, animation, animateChild, useAnimation, group, sequence, transition, state, trigger, query, stagger, keyframes } from '@angular/animations';
 
 import { ActionSheetController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
@@ -28,49 +28,13 @@ import { ApiService } from '../api.service';
   animations: [
 
 
-    // trigger('widthGrow', [
-    //   state('closed', style({
-    //     width: 0,
-    //   })),
-    //   state('open', style({
-    //     width: 400
-    //   })),
-
-    //   transition('* => *', animate(150)),
-
-    // ]),
-    // trigger('sateBLE2', [
-    //   state('closed2', style({
-    //     width: 0
-    //   })),
-    //   state('open2', style({
-    //     width: 400
-    //   })),
-    //   transition('* => *', animate(150))
-
-    // ]),
-    trigger('size', [
-
-      state('large', style({
-        height: '400px'
-      })),
-      state('none', style({
-        height: '0px'
-      })),
-
-      transition('none => large', animate('300ms')),
-      transition('large => none', animate('300ms')),
-
-      // transition('empty => large', animate('300ms')),
-      // transition('no => large', animate('300ms')),
-    ]),
-
     trigger('transition', [
       state('init', style({
         transform: 'translate3d(-24px, 197px, 0px) scale(1.8)'
       })),
       state('position1', style({
-        transform: 'translate3d(-24px, 1000px, 0px) scale(5)'
+        // transform: 'translate3d(-24px, 1000px, 0px) scale(5)'
+
       })),
       state('position2', style({
         transform: 'translate3d(-304px, 600px, 0px) scale(5)'
@@ -92,14 +56,36 @@ import { ApiService } from '../api.service';
       transition('position3=>init', animate('400ms ease-in-out')),
       transition('position4=>init', animate('400ms ease-in-out')),
 
-    ])
+    ]),
+
+    // bounce img1 starts
+    trigger('bounce', [
+      transition('* => *', [
+        animate(
+          1000,
+          keyframes([
+            style({ transform: 'translateX(0)    rotateY(0)', offset: 0 }),
+            style({
+              transform: 'translateY(-10%) ',
+              offset: 0.33,
+            }),
+            // style({
+            //   transform: 'translateY(-20%) ',
+            //   offset: 0.66,
+            // }),
+            style({ transform: 'translateY(0%)', offset: 1.0 }),
+          ])
+        ),
+      ]),
+    ]),
+    
 
   ],
 
 })
 export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
   state = "closed";
-
+  hide = false
   size = 'none';
   sizeImg1 = 'none';
   sizeImg2 = 'none';
@@ -109,6 +95,7 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
 
   // public animateProfile = true;
   // @HostListener('window:scroll')
+  trigger: boolean;
 
   dataParams = new dataparams();
   deviceList: any = [];
@@ -135,7 +122,8 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
   }
   subscription: Subscription;
   show: boolean = false;
-  svgElement = document.getElementById('layout')
+  svgElement = document.getElementById('layout');
+  bounceName = 'bounceUp'
   constructor(private renderer: Renderer2, private api: ApiService, private deviceMotion: DeviceMotion, public toastController: ToastController, public actionSheetController: ActionSheetController, public modalController: ModalController, private geolocation: Geolocation, private platform: Platform, private ble: BLE, private zone: NgZone) {
     // this.api.getBLEList().subscribe(res => {
     //   if (res) {
@@ -156,9 +144,16 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
   currState: boolean = false;
   ngAfterViewInit() {
     // this.scrollToPosition();
-    // this.gotoTop()        
+    // this.gotoTop() 
+    // setInterval(() => (this.trigger = !this.trigger),1000);
+       
   }
   multipleState: string = 'state1';
+
+  bounceImg1=false;
+  bounceImg3=false;
+  bounceImg4=false;
+  bounceImg2=false;
 
   changeState(): void {
 
@@ -171,6 +166,9 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg3 = 'none';
       this.sizeImg1 = 'large';
       // console.log('1', this.size, this.sizeImg1)
+      // bounce starts
+      setInterval(() => (this.bounceImg1 = !this.bounceImg1),1000);
+
 
     } else if (this.currPosition.loc == 'IoT-Lab') {
       this.transForm = 'position2';
@@ -178,6 +176,8 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg1 = 'none';
       this.sizeImg2 = 'none';
       this.sizeImg3 = 'none';
+      setInterval(() => (this.bounceImg2 = !this.bounceImg2),1000);
+
     }
     else if (this.currPosition.loc == 'Network-Team') {
       this.transForm = 'position3';
@@ -186,6 +186,8 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg2 = 'large';
       this.sizeImg3 = 'none';
       // console.log('2', this.size, this.sizeImg1)
+      setInterval(() => (this.bounceImg3 = !this.bounceImg3),1000);
+
     }
     else if (this.currPosition.loc == 'ISL-Entrance') {
       this.transForm = 'position4';
@@ -193,14 +195,18 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg1 = 'none';
       this.sizeImg2 = 'none';
       this.sizeImg3 = 'large';
-      // console.log('2', this.size, this.sizeImg1)
+      setInterval(() => (this.bounceImg4 = !this.bounceImg4),1000);
     } else {
       this.size = 'none';
       this.sizeImg1 = 'none';
       this.sizeImg2 = 'none';
       this.sizeImg3 = 'none';
       this.transForm = 'init'
-
+      this.bounceImg1=false;
+      this.bounceImg3=false;
+      this.bounceImg4=false;
+      this.bounceImg2=false;
+    
     }
   }
 
@@ -356,6 +362,8 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       let meters: any;
       if (arr[0].Distance) {
         meters = arr[0].Distance;
+        // setInterval(() => (this.bounceImg2 = !this.bounceImg2),1000);
+
       }
       return type == 'mac' ? arr[0].id : type == 'Dist' && arr[0].Distance ? `RSSI :${arr[0].rssi} @ ${meters
         } meters` : type == 'color' ? arr[0].deviceColor : type == 'status' ? arr[0].active.toUpperCase() : '';

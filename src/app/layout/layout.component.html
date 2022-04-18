@@ -48,12 +48,12 @@
               <!-- <circle id="ble1" cx="0" cy="0" r="50" attr.fill="{{getBLE(deviceList[0].id,'color')}}" /> -->
               <!-- <image x="110" y="-180" [width]="imgWidth" height="250" href="assets/wifi.png" /> -->
 
-              <image *ngIf="deviceList.length>0" [@size]="sizeImg1" x="110" y="-180" width="500" height="250"
-                href="assets/wifi.png" />
+              <!-- <image  [@size]="sizeImg1" x="110" y="-180" width="500" height="250"
+                href="assets/wifi.png" /> -->
               <circle cx="100" cy="100" r="57" id="IoT-Team" fill="none" stroke="#e40000" stroke-width="40"
                 stroke-dasharray="0,20000" transform="rotate(-90,100,100)" />
 
-              <image width="500" *ngIf="getBLE(1,'status')=='ACTIVE'" height="250" href="assets/activeBLE.png" />
+              <image width="500" [@bounce]="bounceImg1" *ngIf="getBLE(1,'status')=='ACTIVE'" height="250" href="assets/activeBLE.png" />
               <image width="500" *ngIf="getBLE(1,'status')!='ACTIVE'" height="250" href="assets/inactiveBLE.png" />
 
               <!-- {{getBLE(0,'status')}} -->
@@ -76,8 +76,8 @@
 
               <circle cx="100" cy="100" r="57" id="IoT-Lab" fill="none" stroke="#e40000" stroke-width="40"
                 stroke-dasharray="0,20000" transform="rotate(-90,100,100)" />
-              <image [@size]="size" x="110" y="-180" width="500" height="250" href="assets/wifi.png" />
-              <image width="500" *ngIf="getBLE(2,'status')=='ACTIVE'" height="250" href="assets/activeBLE.png" />
+              <!-- <image [@size]="size" x="110" y="-180" width="500" height="250" href="assets/wifi.png" /> -->
+              <image [@bounce]="bounceImg2" *ngIf="getBLE(2,'status')=='ACTIVE'" width="500"  height="250" href="assets/activeBLE.png" />
               <image width="500" *ngIf="getBLE(2,'status')!='ACTIVE'" height="250" href="assets/inactiveBLE.png" />
 
 
@@ -102,9 +102,9 @@
 
               <circle cx="100" cy="100" r="57" id="Network-Team" fill="none" stroke="#e40000" stroke-width="40"
                 stroke-dasharray="0,20000" transform="rotate(-90,100,100)" />
-              <image width="500" *ngIf="getBLE(3,'status')=='ACTIVE'" height="250" href="assets/activeBLE.png" />
+              <image width="500" [@bounce]="bounceImg3" *ngIf="getBLE(3,'status')=='ACTIVE'" height="250" href="assets/activeBLE.png" />
               <image width="500" *ngIf="getBLE(3,'status')!='ACTIVE'" height="250" href="assets/inactiveBLE.png" />
-              <image [@size]="sizeImg2" x="110" y="-180" width="500" height="250" href="assets/wifi.png" />
+              <!-- <image [@size]="sizeImg2" x="110" y="-180" width="500" height="250" href="assets/wifi.png" /> -->
 
               <text class="mainsvg" xml:space="preserve" font-family="Roboto" font-size="35" font-style="normal"
                 font-weight="600"
@@ -122,9 +122,9 @@
             <g transform="matrix(0.21 0 0 0.19 685.34 880.48)" style="" id="gble4">
               <circle cx="100" cy="100" r="57" id="ISL-Entrance" fill="none" stroke="#e40000" stroke-width="40"
                 stroke-dasharray="0,20000" transform="rotate(-90,100,100)" />
-              <image width="500" *ngIf="getBLE(4,'status')=='ACTIVE'" height="250" href="assets/activeBLE.png" />
+              <image width="500" [@bounce]="bounceImg4" *ngIf="getBLE(4,'status')=='ACTIVE'" height="250" href="assets/activeBLE.png" />
               <image width="500" *ngIf="getBLE(4,'status')!='ACTIVE'" height="250" href="assets/inactiveBLE.png" />
-              <image [@size]="sizeImg3" x="110" y="-180" width="500" height="250" href="assets/wifi.png" />
+              <!-- <image [@size]="sizeImg3" x="110" y="-180" width="500" height="250" href="assets/wifi.png" /> -->
 
               <text id="myTimer" text-anchor="middle" x="100" y="110" style="font-size: 36px;"></text>
 
@@ -148,7 +148,7 @@
           </svg>
 
 
-          <svg *ngIf="eererwe" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+          <svg *ngIf="hide" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="869px" height="1817px"
             viewBox="0 0 869 1817" enable-background="new 0 0 869 1817" xml:space="preserve">
             <image id="image0" width="869" height="1817" x="0" y="0" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA2UAAAcZCAMAAABDB0jIAAAABGdBTUEAALGPC/xhBQAAACBjSFJN
