@@ -66,19 +66,19 @@ import { ApiService } from '../api.service';
           keyframes([
             style({ transform: 'translateX(0)    rotateY(0)', offset: 0 }),
             style({
-              transform: 'translateY(-10%) ',
+              transform: 'translateY(-10%) scale(1.5)',
               offset: 0.33,
             }),
             // style({
             //   transform: 'translateY(-20%) ',
             //   offset: 0.66,
             // }),
-            style({ transform: 'translateY(0%)', offset: 1.0 }),
+            style({ transform: 'translateY(0%) scale(.6)', offset: 1.0 }),
           ])
         ),
       ]),
     ]),
-    
+
 
   ],
 
@@ -145,15 +145,15 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
   ngAfterViewInit() {
     // this.scrollToPosition();
     // this.gotoTop() 
-    // setInterval(() => (this.trigger = !this.trigger),1000);
-       
+    
+
   }
   multipleState: string = 'state1';
 
-  bounceImg1=false;
-  bounceImg3=false;
-  bounceImg4=false;
-  bounceImg2=false;
+  bounceImg1 = false;
+  bounceImg3 = false;
+  bounceImg4 = false;
+  bounceImg2 = false;
 
   changeState(): void {
 
@@ -166,7 +166,11 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg1 = 'large';
       // console.log('1', this.size, this.sizeImg1)
       // bounce starts
-      setInterval(() => (this.bounceImg1 = !this.bounceImg1),1000);
+      // setInterval(() => (this.bounceImg1 = !this.bounceImg1),1000);
+      if (this.bounceImgInt1) {
+        clearInterval(this.bounceImgInt1)
+      }
+      this.bounceImgInt1 = setInterval(() => (this.bounceImg1 = !this.bounceImg1), 1000);
 
 
     } else if (this.currPosition.loc == 'IoT-Lab') {
@@ -175,7 +179,11 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg1 = 'none';
       this.sizeImg2 = 'none';
       this.sizeImg3 = 'none';
-      setInterval(() => (this.bounceImg2 = !this.bounceImg2),1000);
+      // setInterval(() => (this.bounceImg2 = !this.bounceImg2),1000);
+      if (this.bounceImgInt2) {
+        clearInterval(this.bounceImgInt2)
+      }
+      this.bounceImgInt2 = setInterval(() => (this.bounceImg2 = !this.bounceImg2), 1000);
 
     }
     else if (this.currPosition.loc == 'Network-Team') {
@@ -185,8 +193,11 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg2 = 'large';
       this.sizeImg3 = 'none';
       // console.log('2', this.size, this.sizeImg1)
-      setInterval(() => (this.bounceImg3 = !this.bounceImg3),1000);
-
+      // setInterval(() => (this.bounceImg3 = !this.bounceImg3),1000);
+      if (this.bounceImgInt3) {
+        clearInterval(this.bounceImgInt3)
+      }
+      this.bounceImgInt3 = setInterval(() => (this.bounceImg3 = !this.bounceImg3), 1000);
     }
     else if (this.currPosition.loc == 'ISL-Entrance') {
       this.transForm = 'position4';
@@ -194,23 +205,46 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg1 = 'none';
       this.sizeImg2 = 'none';
       this.sizeImg3 = 'large';
-      setInterval(() => (this.bounceImg4 = !this.bounceImg4),1000);
+      // setInterval(() => (this.bounceImg4 = !this.bounceImg4),1000);
+      if (this.bounceImgInt4) {
+        clearInterval(this.bounceImgInt4)
+      }
+      this.bounceImgInt4 = setInterval(() => (this.bounceImg4 = !this.bounceImg4), 1000);
     } else {
       this.size = 'none';
       this.sizeImg1 = 'none';
       this.sizeImg2 = 'none';
       this.sizeImg3 = 'none';
       this.transForm = 'init'
-      this.bounceImg1=false;
-      this.bounceImg3=false;
-      this.bounceImg4=false;
-      this.bounceImg2=false;
-    
+      this.bounceImg1 = false;
+      this.bounceImg3 = false;
+      this.bounceImg4 = false;
+      this.bounceImg2 = false;
+      if (this.bounceImgInt1) {
+        clearInterval(this.bounceImgInt1)
+      }
+      if (this.bounceImgInt2) {
+        clearInterval(this.bounceImgInt2)
+      }
+      if (this.bounceImgInt3) {
+        clearInterval(this.bounceImgInt3)
+      }
+      if (this.bounceImgInt4) {
+        clearInterval(this.bounceImgInt4)
+      }
+
     }
   }
 
-
+  bounceImgInt1: any;
+  bounceImgInt2: any;
+  bounceImgInt3: any;
+  bounceImgInt4: any;
   ngOnInit() {
+    // if(this.bounceImgInt1){
+    //  clearInterval(this.bounceImgInt1)
+    // }
+    // this.bounceImgInt1=setInterval(() => (this.bounceImg1 = !this.bounceImg1),1000);
 
     this.pageLoad()
     // this.locationList = valModel.locationList.map(a => {
