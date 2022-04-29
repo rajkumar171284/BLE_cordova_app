@@ -25,6 +25,9 @@
 @import "~@ionic/angular/css/text-transformation.css";
 @import "~@ionic/angular/css/flex-utils.css";
 
+.logo{
+height:60px;
+}
 :root {
 	--ion-color-mybg:linear-gradient(0deg, rgba(34,193,195,1) 0%, #7B68EE 100%);
 	--ion-color-mybg-rgb: 187,204,221;

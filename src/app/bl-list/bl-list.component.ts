@@ -59,7 +59,7 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
   
   ngOnInit() {
     this.isScanned = false;
-    this.deviceList = valModel.staticList.map((x: bleList, i) => {
+    this.dataParams.data = valModel.staticList.map((x: bleList, i) => {
       return x;
     })
     this.deviceList = this.dataParams.data;
@@ -218,14 +218,14 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  selectBLE(item: any) {
-    if (item) {
-      this.router.navigate(['setBLE'],{
-        queryParams:item
-      })
+  // selectBLE(item: any) {
+  //   if (item) {
+  //     this.router.navigate(['setBLE'],{
+  //       queryParams:item
+  //     })
 
-    }
-  }
+  //   }
+  // }
 
   stopScan(e) {
     e.stopPropagation();

@@ -12,9 +12,8 @@ export class OrderPipe implements PipeTransform {
     if (arr.length > 0) {
       if (order.toLowerCase() === 'active') {
         return arr.filter(a => a.isBLEMatched==true);        
-      } else {
-        return arr;
       }
+      return arr;
     }
   }
 

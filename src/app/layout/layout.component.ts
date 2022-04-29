@@ -64,16 +64,12 @@ import { ApiService } from '../api.service';
         animate(
           1000,
           keyframes([
-            style({ transform: 'translateX(0)    rotateY(0)', offset: 0 }),
+            style({ transform: 'scale(.6)', offset: 0 }),
             style({
-              transform: 'translateY(-10%) scale(1.5)',
+              transform: 'scale(1.5)',
               offset: 0.33,
             }),
-            // style({
-            //   transform: 'translateY(-20%) ',
-            //   offset: 0.66,
-            // }),
-            style({ transform: 'translateY(0%) scale(.6)', offset: 1.0 }),
+            style({ transform: 'scale(.6)', offset: 1.0 }),
           ])
         ),
       ]),
@@ -84,6 +80,7 @@ import { ApiService } from '../api.service';
 
 })
 export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
+  public watchLoc:any;
   state = "closed";
   hide = false
   size = 'none';
@@ -91,10 +88,6 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
   sizeImg2 = 'none';
   sizeImg3 = 'none';
   transForm: string = 'init';
-  // @ViewChild("mySlider") mySlider: ElementRef;
-
-  // public animateProfile = true;
-  // @HostListener('window:scroll')
   trigger: boolean;
 
   dataParams = new dataparams();
@@ -143,8 +136,6 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
 
   currState: boolean = false;
   ngAfterViewInit() {
-    // this.scrollToPosition();
-    // this.gotoTop() 
     
 
   }
@@ -170,7 +161,21 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       if (this.bounceImgInt1) {
         clearInterval(this.bounceImgInt1)
       }
+      this.bounceImg3 = false;
+      this.bounceImg4 = false;
+      this.bounceImg2 = false;
       this.bounceImgInt1 = setInterval(() => (this.bounceImg1 = !this.bounceImg1), 1000);
+      // 
+     
+      if (this.bounceImgInt2) {
+        clearInterval(this.bounceImgInt2)
+      }
+      if (this.bounceImgInt3) {
+        clearInterval(this.bounceImgInt3)
+      }
+      if (this.bounceImgInt4) {
+        clearInterval(this.bounceImgInt4)
+      }
 
 
     } else if (this.currPosition.loc == 'IoT-Lab') {
@@ -185,6 +190,20 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       }
       this.bounceImgInt2 = setInterval(() => (this.bounceImg2 = !this.bounceImg2), 1000);
 
+      this.bounceImg3 = false;
+      this.bounceImg4 = false;
+      this.bounceImg1 = false;
+
+      if (this.bounceImgInt1) {
+        clearInterval(this.bounceImgInt1)
+      }
+      
+      if (this.bounceImgInt3) {
+        clearInterval(this.bounceImgInt3)
+      }
+      if (this.bounceImgInt4) {
+        clearInterval(this.bounceImgInt4)
+      }
     }
     else if (this.currPosition.loc == 'Network-Team') {
       this.transForm = 'position3';
@@ -198,6 +217,21 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
         clearInterval(this.bounceImgInt3)
       }
       this.bounceImgInt3 = setInterval(() => (this.bounceImg3 = !this.bounceImg3), 1000);
+
+      this.bounceImg1 = false;
+      this.bounceImg4 = false;
+      this.bounceImg2 = false;
+
+      if (this.bounceImgInt1) {
+        clearInterval(this.bounceImgInt1)
+      }
+      if (this.bounceImgInt2) {
+        clearInterval(this.bounceImgInt2)
+      }
+      
+      if (this.bounceImgInt4) {
+        clearInterval(this.bounceImgInt4)
+      }
     }
     else if (this.currPosition.loc == 'ISL-Entrance') {
       this.transForm = 'position4';
@@ -210,6 +244,22 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
         clearInterval(this.bounceImgInt4)
       }
       this.bounceImgInt4 = setInterval(() => (this.bounceImg4 = !this.bounceImg4), 1000);
+
+      this.bounceImg3 = false;
+      this.bounceImg1 = false;
+      this.bounceImg2 = false;
+
+      if (this.bounceImgInt1) {
+        clearInterval(this.bounceImgInt1)
+      }
+      if (this.bounceImgInt2) {
+        clearInterval(this.bounceImgInt2)
+      }
+      if (this.bounceImgInt3) {
+        clearInterval(this.bounceImgInt3)
+      }
+      
+
     } else {
       this.size = 'none';
       this.sizeImg1 = 'none';
@@ -241,6 +291,8 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
   bounceImgInt3: any;
   bounceImgInt4: any;
   ngOnInit() {
+    // this.bounceImgInt1 = setInterval(() => (this.bounceImg1 = !this.bounceImg1), 1000);
+
     // if(this.bounceImgInt1){
     //  clearInterval(this.bounceImgInt1)
     // }
@@ -304,8 +356,8 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
   pageLoad() {
     this.platform.ready().then(() => {
 
-      let watch = this.geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000 });
-      this.watch = watch.subscribe((data: any) => {
+      this.watchLoc = this.geolocation.watchPosition({ enableHighAccuracy: true, timeout: 10000 });
+      this.watch = this.watchLoc.subscribe((data: any) => {
         // console.log(data)
         if (data && data.coords) {
           this.currPosition.lat = data.coords.latitude;
@@ -395,7 +447,6 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       let meters: any;
       if (arr[0].Distance) {
         meters = arr[0].Distance;
-        // setInterval(() => (this.bounceImg2 = !this.bounceImg2),1000);
 
       }
       return type == 'mac' ? arr[0].id : type == 'Dist' && arr[0].Distance ? `RSSI :${arr[0].rssi} @ ${meters
@@ -432,7 +483,7 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
     if (res.Distance && res.rssi) {
       this.currPosition.id = res.id;
       this.currPosition.rssi = `${res.rssi}`;
-      str = `MAC:${res.id} ,RSSI:${res.rssi} at a distance of ${res.Distance} meters`;
+      str = `MAC:${res.id} ,RSSI ${res.rssi} at a distance of ${res.Distance} meters`;
       colr = 'success';
       hdr = 'Nearby BLE is,';
       newIcon = 'bluetooth-outline';
@@ -495,9 +546,11 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
     this.kill()
   }
   kill() {
+    this.watchLoc.unsubscribe();
     this.watch.unsubscribe();
     this.scanSubs.unsubscribe();
     this.subscription.unsubscribe()
+    
   }
 
   isLocated(ble: any, loc: string) {
@@ -532,14 +585,6 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
     }
   }
 
-  // TODO: Cross browsing
-  gotoTop() {
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
-  }
 
   jonu(x) {
     // // console.log(x)

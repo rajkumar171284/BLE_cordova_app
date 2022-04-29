@@ -1,10 +1,8 @@
-.bounce{
-    
-}
 ion-content{
     position: relative;
 }
 .swiper-zoom-container{
+    width: 100%;
     transition: .50s all;
 }
 .myble{
@@ -21,11 +19,11 @@ svg{
     
 }
 
-.defaultZoom{
-    transform: translate3d(-24px, 197px, 0px) scale(1.8);
+#Layer_1{
+    transform: translate3d(-48px, 207px, 0px) scale(1.7);
 }
 .zoomBLE1{
-    transform: translate3d(-24px, 197px, 0px) scale(2.8);
+    // transform: translate3d(-24px, 197px, 0px) scale(2.8);
 }
 .layout{
     position: relative;    
@@ -59,22 +57,13 @@ svg{
         }
     }
 .position{
-    width: 100%; 
-       position: absolute;
-    z-index: 32;
-    bottom: 55px;
-    // border-radius: 3px;
-    background: rgba(0,0,0,.4);
-    padding: 0px;
-    // -webkit-box-shadow:0 1px 2px #000;
-    // -moz-box-shadow:0 1px 2px #000;
-    // box-shadow:0 1px 2px #000;
+    width: 100%; position: absolute;z-index: 32;bottom: 55px;background: rgba(0,0,0,.4);padding: 0px;
     transition: .5s all;
 }
 .bottom-cnt{
     background: #5260ff;color:#fff;
-    ion-card-header,ion-card-subtitle{
-        color:#fff;
+    ion-card-subtitle{
+        color:#fff;font-size:.7em;
     }
 }
 .loc-position{
@@ -105,11 +94,9 @@ ion-slides {
   }
   
 .zoom-box {
-    position: absolute;
-    height: 90%;   
-    //  top: 50px;
+    position: fixed;
+    height: 100%;   
     top: 0px;
-    padding-top:20px;
     display: flex;
     width: 100%;
     background-color: #fff;
@@ -125,7 +112,7 @@ ion-slides {
 }
 ion-card-subtitle{
     ion-badge{
-        color:#000;
+        color:#000;font-size: .7em;
     }
 }
 #IoT-TeamImg{
