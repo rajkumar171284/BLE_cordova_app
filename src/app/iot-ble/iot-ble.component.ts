@@ -38,33 +38,33 @@ export class IotBleComponent implements OnInit {
   }
 
   submit() {
-    console.log(this.bleForm)
-    if (!this.bleForm.valid) {
-      this.presentToast('Input missing..');
-      return;
-    }
+    // console.log(this.bleForm)
+    // if (!this.bleForm.valid) {
+    //   this.presentToast('Input missing..');
+    //   return;
+    // }
 
 
-    let params = {
-      Distance: "0",
-      SNo: 0,
-      active: "In-Active",
-      circleColor: "",
-      deviceColor: "#3880ff",
-      id: this.bleForm.get('id').value,
-      isBLEMatched: false,
-      loc: this.bleForm.get('loc').value,
-      name: this.bleForm.get('name').value,
-      rssi: 0,
-      strengthColor: "medium"
+    // let params = {
+    //   Distance: "0",
+    //   SNo: 0,
+    //   active: "In-Active",
+    //   circleColor: "",
+    //   deviceColor: "#3880ff",
+    //   id: this.bleForm.get('id').value,
+    //   isBLEMatched: false,
+    //   loc: this.bleForm.get('loc').value,
+    //   name: this.bleForm.get('name').value,
+    //   rssi: 0,
+    //   strengthColor: "medium"
 
-    }
-    this.api.addNewBLE(params).then(res => {
-      console.log(res)
-      this.presentToast('Your settings have been saved.');
-      this.back();
+    // }
+    // this.api.addNewBLE(params).then(res => {
+    //   console.log(res)
+    //   this.presentToast('Your settings have been saved.');
+    //   this.back();
       
-    })
+    // })
 
   }
 

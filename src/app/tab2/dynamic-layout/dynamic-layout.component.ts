@@ -30,14 +30,14 @@ export class DynamicLayoutComponent implements OnInit {
   deviceList: any = [];
 
   constructor(private renderer: Renderer2, private api: ApiService, private deviceMotion: DeviceMotion, public toastController: ToastController, public actionSheetController: ActionSheetController, public modalController: ModalController, private geolocation: Geolocation, private platform: Platform, private ble: BLE, private zone: NgZone) {
-    this.api.getBLEList().subscribe(res => {
-      if (res) {
+    // this.api.getBLEList().subscribe(res => {
+    //   if (res) {
         
-        this.deviceList = res;
-        this.show=true;
+    //     this.deviceList = res;
+    //     this.show=true;
 
-      }
-    })
+    //   }
+    // })
     // this.deviceList =valModel.staticList;
   }
 

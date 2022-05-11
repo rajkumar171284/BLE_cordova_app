@@ -12,8 +12,8 @@ import { SharedModule } from './shared/shared.module';
 // import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 import { environment } from '../environments/environment';
-import { provideFirebaseApp, initializeApp } from '@angular/fire/app'
-import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+// import { provideFirebaseApp, initializeApp } from '@angular/fire/app'
+// import { provideFirestore, getFirestore } from '@angular/fire/firestore';
 import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
@@ -21,8 +21,8 @@ import { ReactiveFormsModule } from '@angular/forms';
   entryComponents: [],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, BrowserAnimationsModule,ReactiveFormsModule,
     SharedModule,
-    provideFirebaseApp(() => initializeApp(environment.firebase)),
-    provideFirestore(() => getFirestore())
+    // provideFirebaseApp(() => initializeApp(environment.firebase)),
+    // provideFirestore(() => getFirestore())
   ],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, BLE],
   bootstrap: [AppComponent],
