@@ -30,4 +30,14 @@ export class ApiService {
       return response;
     }))
   }
+  getAllMAC(params: any): Observable<any> {
+    return this.http.post(`${environment.url}/asset/getAllMACdetails`,params, option).pipe(map(response => {
+      return response;
+    }))
+  }
+  addMACdetails(params: any): Observable<any> {
+    return this.http.post(`${environment.url}/asset/addMACdata`,params, option).pipe(map(response => {
+      return response;
+    }))
+  }
 }

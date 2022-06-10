@@ -4,7 +4,9 @@
 
 export const environment = {
   production: false,
-  url:'',
+  // url:'http://127.0.0.1:3000/api',
+  url: 'http://192.168.1.3:3000/api',//public ip
+
   firebase:{
     apiKey: "AIzaSyA1TArnI9A1XjWL7Cjpfj36PJrAPz5V0kg",
   authDomain: "bleapp-a7449.firebaseapp.com",
