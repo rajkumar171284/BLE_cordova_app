@@ -26,7 +26,7 @@ export class ApiService {
   // }
   setLightControl(params): Observable<any> {
     return this.http.post(url + "/led_control", params, option).pipe(map((response: HttpResponse<any>) => {
-      console.log(response)
+      // console.log(response)
       return response;
     }))
   }

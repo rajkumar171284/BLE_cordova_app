@@ -1,7 +1,6 @@
 import { Component, OnInit, Renderer2, NgZone, DoCheck, ViewChild, ElementRef, AfterViewInit, HostBinding, HostListener } from '@angular/core';
 import { Main, bleList, bleDOMClass, dataparams } from '../main'
-import { Observable, of, Subscription } from 'rxjs';
-// import { element } from 'protractor';
+import { Subscription } from 'rxjs';
 import { BLE } from '@awesome-cordova-plugins/ble/ngx';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { Platform } from '@ionic/angular';
@@ -9,11 +8,10 @@ const valModel = new Main();
 import { IotLabLayoutPage } from '../pages/iot-lab-layout/iot-lab-layout.page';
 import { ModalController } from '@ionic/angular';
 import * as _ from 'lodash';
-import { style, animate, animation, animateChild, useAnimation, group, sequence, transition, state, trigger, query, stagger, keyframes } from '@angular/animations';
+import { style, animate, transition, state, trigger, query, stagger, keyframes } from '@angular/animations';
 
 import { ActionSheetController } from '@ionic/angular';
 import { ToastController } from '@ionic/angular';
-// import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 import { DeviceMotion, DeviceMotionAccelerationData } from '@awesome-cordova-plugins/device-motion/ngx';
 import { IonSlides } from '@ionic/angular';
 import { ApiService } from '../api.service';

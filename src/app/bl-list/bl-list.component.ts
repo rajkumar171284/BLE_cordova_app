@@ -9,33 +9,13 @@ import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { ApiService } from '../api.service';
 const valModel = new Main();
 
-// import {
-//   trigger,
-//   state,
-//   style,
-//   animate,
-//   transition
-// } from '@angular/animations';
-// import { fadeInOnEnterAnimation, fadeOutOnLeaveAnimation } from 'angular-animations';
-
 
 @Component({
   selector: 'app-bl-list',
   templateUrl: './bl-list.component.html',
   styleUrls: ['./bl-list.component.scss'],
   providers: [BLE, Geolocation],
-  // animations: [
-  //   trigger('popOverState', [
-  //     state('show', style({
-  //       opacity: 1
-  //     })),
-  //     state('hide', style({
-  //       opacity: 0
-  //     })),
-  //     transition('show => hide', animate('600ms ease-out')),
-  //     transition('hide => show', animate('1000ms ease-in'))
-  //   ])
-  //  ]
+ 
 
 })
 export class BlListComponent implements OnInit, OnDestroy, OnChanges {
@@ -64,13 +44,7 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
     })
     this.deviceList = this.dataParams.data;
 
-    // this.api.getBLEList().subscribe(res => {
-    //   if (res) {
-    //     this.dataParams.data = res;
-    //     console.log(this.dataParams.data)
-    //     this.deviceList = this.dataParams.data;
-    //   }
-    // })
+  
 
     console.log(this.deviceList)
 
