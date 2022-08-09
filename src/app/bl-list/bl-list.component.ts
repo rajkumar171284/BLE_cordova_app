@@ -3,12 +3,32 @@ import { BLE } from '@awesome-cordova-plugins/ble/ngx';
 import { Platform } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { Main, bleList, bleDOMClass, dataparams } from '../main'
-import { Observable, of, Subscription } from 'rxjs';
+import { forkJoin, Observable, of, Subscription } from 'rxjs';
 import { element } from 'protractor';
 import { Geolocation } from '@awesome-cordova-plugins/geolocation/ngx';
 import { ApiService } from '../api.service';
+// import { map } from 'lodash';
+// import{map} from 'rxjs';
 const valModel = new Main();
 
+
+interface tblBLE {
+
+  MAC_ADDRESS_ID: string,
+  VALUE: number,
+  STATUS: boolean,
+  CONNECTION_TYPE: string,
+  MAC_ADDRESS: string
+}
+
+// import {
+//   trigger,
+//   state,
+//   style,
+//   animate,
+//   transition
+// } from '@angular/animations';
+// import { fadeInOnEnterAnimation, fadeOutOnLeaveAnimation } from 'angular-animations';
 
 @Component({
   selector: 'app-bl-list',
@@ -26,18 +46,38 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
   newObservable: Subscription | undefined;
   listStatus: string = 'a';
   statusMessage: any;
-  constructor(private router:Router ,private api: ApiService, private platform: Platform, private geolocation: Geolocation, private ble: BLE, private zone: NgZone) {
+  allMACdata: tblBLE[] = []
+  constructor(private router: Router, private api: ApiService, private platform: Platform, private geolocation: Geolocation, private ble: BLE, private zone: NgZone) {
+
 
   }
 
   interval: any;
   interval2: any;
   currPosition: any = {};
-  ionViewWillEnter(){
+  ionViewWillEnter() {
     console.log("ionViewWillEnter")
+
   }
-  
+
   ngOnInit() {
+    this.api.getAllMAC({}).subscribe(res => {
+      // console.log(res)
+      this.allMACdata = res.data.map(item => {
+        return {
+
+          MAC_ADDRESS_ID: item.PID,
+          VALUE: 0,
+          STATUS: false,
+          CONNECTION_TYPE: '',
+          MAC_ADDRESS: item.MAC_ADDRESS
+
+        };
+      });
+      // this.updateBLEstatus()
+
+
+    })
     this.isScanned = false;
     this.dataParams.data = valModel.staticList.map((x: bleList, i) => {
       return x;
@@ -92,7 +132,7 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
           this.currPosition.lat = data.coords.latitude;
           this.currPosition.lng = data.coords.longitude;
           this.currPosition.datetime = data.coords.timestamp;
-          this.ble.scan([], 5).subscribe(res =>
+          this.ble.scan([], 20).subscribe(res =>
             this.updatedata(res),
             error => this.scanError(error)
             // this.ble.startStateNotifications().subscribe(state => {
@@ -126,7 +166,7 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
     // toast.present();
   }
   setStatus(message) {
-    console.log(message);
+    // console.log(message);
     this.zone.run(() => {
       this.statusMessage = message;
     });
@@ -148,11 +188,21 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
   updatedata(x) {
     // console.log('upt', x)
     this.zone.run(() => {
-      // this.filterList(x);
       const list = this.formatList(x);
       this.allDevices.push(list)
       // console.log(this.allDevices)
       this.deviceList = this.allDevices.map(ble => {
+        this.allMACdata.forEach(item => {
+          if (item.MAC_ADDRESS == ble.id) {
+            item.STATUS = true;
+            item.VALUE=ble.rssi;
+
+          } else {
+            item.STATUS = false;
+            item.VALUE=0;
+
+          }
+        })
         let index = this.dataParams.data.findIndex(item => {
           return item.id == ble.id;
         })
@@ -171,9 +221,19 @@ export class BlListComponent implements OnInit, OnDestroy, OnChanges {
       })
       // console.log(this.allDevices)
 
+      this.updateBLEstatus()
+
     });
 
     console.log('this.deviceList', this.deviceList)
+  }
+  updateBLEstatus(){
+    if(this.allMACdata.length==0){
+      return;
+    }
+    forkJoin(this.allMACdata.map(res=>this.api.addMACdetails(res))).subscribe(res => {
+
+    })
   }
   formatList(x: bleList) {
     // console.log('x', x)

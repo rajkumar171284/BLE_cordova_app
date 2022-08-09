@@ -116,15 +116,7 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
   svgElement = document.getElementById('layout');
   bounceName = 'bounceUp'
   constructor(private renderer: Renderer2, private api: ApiService, private deviceMotion: DeviceMotion, public toastController: ToastController, public actionSheetController: ActionSheetController, public modalController: ModalController, private geolocation: Geolocation, private platform: Platform, private ble: BLE, private zone: NgZone) {
-    // this.api.getBLEList().subscribe(res => {
-    //   if (res) {
-    //     this.dataParams.data = res;
-    //     console.log(this.dataParams.data)
-    //     this.deviceList = this.dataParams.data;
-    //     this.show=true;
-
-    //   }
-    // })
+   
     this.deviceList = valModel.staticList;
   }
   imgWidth = '500';
@@ -153,9 +145,7 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg2 = 'none';
       this.sizeImg3 = 'none';
       this.sizeImg1 = 'large';
-      // console.log('1', this.size, this.sizeImg1)
-      // bounce starts
-      // setInterval(() => (this.bounceImg1 = !this.bounceImg1),1000);
+      
       if (this.bounceImgInt1) {
         clearInterval(this.bounceImgInt1)
       }
@@ -182,7 +172,6 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg1 = 'none';
       this.sizeImg2 = 'none';
       this.sizeImg3 = 'none';
-      // setInterval(() => (this.bounceImg2 = !this.bounceImg2),1000);
       if (this.bounceImgInt2) {
         clearInterval(this.bounceImgInt2)
       }
@@ -209,9 +198,7 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg1 = 'none';
       this.sizeImg2 = 'large';
       this.sizeImg3 = 'none';
-      // console.log('2', this.size, this.sizeImg1)
-      // setInterval(() => (this.bounceImg3 = !this.bounceImg3),1000);
-      if (this.bounceImgInt3) {
+        if (this.bounceImgInt3) {
         clearInterval(this.bounceImgInt3)
       }
       this.bounceImgInt3 = setInterval(() => (this.bounceImg3 = !this.bounceImg3), 1000);
@@ -237,7 +224,6 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
       this.sizeImg1 = 'none';
       this.sizeImg2 = 'none';
       this.sizeImg3 = 'large';
-      // setInterval(() => (this.bounceImg4 = !this.bounceImg4),1000);
       if (this.bounceImgInt4) {
         clearInterval(this.bounceImgInt4)
       }
@@ -289,34 +275,8 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
   bounceImgInt3: any;
   bounceImgInt4: any;
   ngOnInit() {
-    // this.bounceImgInt1 = setInterval(() => (this.bounceImg1 = !this.bounceImg1), 1000);
-
-    // if(this.bounceImgInt1){
-    //  clearInterval(this.bounceImgInt1)
-    // }
-    // this.bounceImgInt1=setInterval(() => (this.bounceImg1 = !this.bounceImg1),1000);
-
+   
     this.pageLoad()
-    // this.locationList = valModel.locationList.map(a => {
-
-    //   a.x = a.x * 50;
-    //   a.y = a.y * 150;
-    //   return a
-    // })
-
-    // this.presentModal()
-
-
-    // this.slides.zoom
-
-    // Watch device acceleration
-    // this.subscription = this.deviceMotion.watchAcceleration().subscribe((acceleration: DeviceMotionAccelerationData) => {
-    //   // console.log(acceleration);
-    //   this.currPosition.x = acceleration.x;
-    //   this.currPosition.y = acceleration.y;
-    //   this.currPosition.z = acceleration.z;
-
-    // });
 
   }
   loadPage() {
@@ -326,7 +286,6 @@ export class LayoutComponent implements OnInit, DoCheck, AfterViewInit {
   findNearestBLE() {
     let near = _.orderBy(this.deviceList, 'Distance', 'asc')
     this.presentToastWithOptions(near[0])
-    // console.log(near)
   }
   ngDoCheck() {
     // console.log('check')    

@@ -17,12 +17,10 @@ export class bleDOMClass {
     circleColor: string;
     getDistance(rssi: number): void {
         if (rssi >= -60 && rssi <= 0) {
-            // this.N = 4;//not working properly, so setting by default 2
             this.N = 2;
             this.strengthColor = 'teritary';
             this.circleColor = '#3880ff';
         } else if (rssi < -60 && rssi >= -70) {
-            // this.N = 3;
             this.N = 2;
             this.strengthColor = 'success';
             this.circleColor = '#00CC33';
@@ -39,7 +37,7 @@ export class bleDOMClass {
     }
 
     getNearByLocated(meter: number) {
-        console.log(meter)
+        
         if (meter <= .8) {
             return true
         } else {
